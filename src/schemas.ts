@@ -9,6 +9,7 @@ export const VerificationFormSchema = z.object({
 
 export const SignUpFormSchema = z.object({
     email: z.string().email("Invalid email").min(1, "Required"),
+    username: z.string().min(8, "Minimum 8 characters").max(20, "Maximum 20 characters"),
     password: z.string().min(8, "Minimum 8 characters").max(100, "Maximum 100 characters"),
 })
 

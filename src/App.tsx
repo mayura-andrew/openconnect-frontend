@@ -3,11 +3,14 @@ import './index.css'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router'
 import { AppProvider } from './context/AppContext'
+import { QueryProvider } from './features/auth/providers/QueryProvider'
 
 export function App() {
-  return (
-    <AppProvider>
-      <RouterProvider router={router} />
-    </AppProvider>
-  )
+    return (
+        <QueryProvider>
+            <AppProvider>
+                <RouterProvider router={router} />
+            </AppProvider>
+        </QueryProvider>
+    )
 }
