@@ -1,5 +1,11 @@
 import { axiosInstance } from '../../../lib/axios'
-import { SignUpRequest, SignUpResponse, ActivationResponse } from '../types'
+import {
+    SignUpRequest,
+    SignUpResponse,
+    ActivationResponse,
+    SignInCredentials,
+    SignInResponse,
+} from '../types'
 
 export const authApi = {
     signUp: async (data: SignUpRequest): Promise<SignUpResponse> => {
@@ -12,5 +18,17 @@ export const authApi = {
             token
         })
         return response.data
+    },
+
+    signIn: async (credentials: SignInCredentials): Promise<SignInResponse> => {
+        const response = await axiosInstance.post<SignInResponse>(
+            '/auth/tokens/authentication',
+            credentials
+        )
+        return response.data
+    },
+
+    googleSignIn: () => {
+        window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/login`
     }
 }

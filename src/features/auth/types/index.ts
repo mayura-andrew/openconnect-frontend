@@ -22,11 +22,14 @@ export interface ValidationError {
     message: string
 }
 
+export interface ValidationErrors {
+    [key: string]: string[]
+}
 export type SignUpResponse = ApiResponse<User>
 
 export interface ApiError {
     message: string
-    errors?: Record<string, string[]>
+    errors?: ValidationErrors
 }
 
 export interface SignUpHookResult {
@@ -53,6 +56,37 @@ export interface ActivationResponse {
 
 export interface UseActivationReturn {
     activateUser: (token: string) => void
+    isLoading: boolean
+    isError: boolean
+    error: ApiError | null
+    isSuccess: boolean
+}
+
+export interface SignInCredentials {
+    email: string
+    password: string
+}
+
+export interface AuthenticationToken {
+    token: string
+    expiry: string
+}
+
+export interface SignInResponse {
+    authentication_token: AuthenticationToken
+}
+
+export interface UseSignInReturn {
+    signIn: (credentials: SignInCredentials) => void
+    isLoading: boolean
+    isError: boolean
+    error: ApiError | null
+    isSuccess: boolean
+    reset: () => void
+}
+
+export interface UseGoogleAuthReturn {
+    googleSignIn: () => void
     isLoading: boolean
     isError: boolean
     error: ApiError | null

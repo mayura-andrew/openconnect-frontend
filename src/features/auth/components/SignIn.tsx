@@ -1,7 +1,5 @@
 
 import { useForm } from "react-hook-form";
-import { useState } from "react";
-
 import { Form, 
     FormControl, 
     FormField, 
@@ -15,14 +13,21 @@ import { FcGoogle } from "react-icons/fc";
 import { Input } from "@/components/ui/input";
 import Spinner from "@/components/Spinner/Spinner.component";
 import SignInImage from "@/assets/images/auth/SignIn-UI-image.svg";
+import { useSignIn } from '@/features/auth/hooks/useSignIn.ts'
+import { SignInCredentials } from '@/features/auth/types'
+import { useGoogleAuth } from '@/features/auth/hooks/useGoogleAuth.ts'
 
 
 
 
 const SignIn: React.FC = () => {
 
-    const [loading, setLoading] = useState(false);
+    const { signIn, isLoading } = useSignIn()
+    const { googleSignIn, isLoading: isGoogleLoading } =  useGoogleAuth()
 
+    const handleGoogleSignIn = () => {
+        googleSignIn()
+    }
     //validations
     const form = useForm({
         resolver: zodResolver(SignInFormSchema),
@@ -33,14 +38,9 @@ const SignIn: React.FC = () => {
     });
 
     //handle login
-    const onLogin = async (values: { email: string; password: string }) => {
-        try{
-            // Todo: fetch api
-
-        }catch (error){
-            console.error(error)
-        }
-    }
+    const onLogin = async (credentials: SignInCredentials) => {
+        signIn(credentials)
+    };
 
     return (
         <>
@@ -66,9 +66,15 @@ const SignIn: React.FC = () => {
                                         Dont have an account?
                                         <a href="#" className="text-blue-600 hover:underline ml-1">Sign Up</a>
                                     </p>
-                                    <Button type="button" variant="outline" className="w-full">
-                                        <FcGoogle className="mr-2" />
-                                        Sign in with Google
+                                    <Button type="button" variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isGoogleLoading}>
+                                        {isGoogleLoading ? (
+                                            <Spinner />
+                                        ) : (
+                                            <>
+                                                <FcGoogle className="mr-2" />
+                                                Sign in with Google
+                                            </>
+                                        )}
                                     </Button>
                                     <div className="flex items-center">
                                         <div className="flex-grow border-t border-gray-300"></div>
@@ -125,8 +131,9 @@ const SignIn: React.FC = () => {
                                         <Button
                                             type="submit"
                                             className="w-full rounded-md bg-blue-600 hover:bg-blue-700"
+                                            disabled={isLoading}
                                         >
-                                            {loading ? <Spinner /> : 'Sign in'}
+                                            {isLoading ? <Spinner /> : 'Sign in'}
                                         </Button>
                                     </div>
                                 </div>

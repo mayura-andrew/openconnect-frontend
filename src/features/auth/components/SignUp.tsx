@@ -44,6 +44,7 @@ const SignUp: React.FC = () => {
             form.reset()
             setShowSuccessMessage(true)
         } catch (error) {
+            
             console.error(error)
         }
     }

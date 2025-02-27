@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { useMutation } from '@tanstack/react-query'
 import { authApi } from '../api'
@@ -10,8 +9,6 @@ import {
 } from '../types'
 
 export const useSignUp = (): UseSignUpReturn => {
-    const navigate = useNavigate()
-
     const { mutate, isPending, isError, error, isSuccess, reset } = useMutation<
         SignUpResponse,
         ApiError,
