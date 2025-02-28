@@ -17,9 +17,14 @@ import { useSignUp } from '@/features/auth/hooks/useSignUp'
 import { FcGoogle } from 'react-icons/fc'
 import { useEffect, useState } from 'react'
 import SuccessMessage from '@/components/common/SuccessMessage'
+import { useNavigate } from 'react-router-dom'
+
 const SignUp: React.FC = () => {
-    const { signUp, isLoading, isError, error } = useSignUp()
+    const { signUp, isLoading, isError, error, isSuccess } = useSignUp()
     const [showSuccessMessage, setShowSuccessMessage] = useState(false)
+    const [showExistingAccountMessage, setShowExistingAccountMessage] = useState(false)
+    const  navigate = useNavigate()
+
 
     const form = useForm({
         resolver: zodResolver(SignUpFormSchema),
@@ -44,24 +49,25 @@ const SignUp: React.FC = () => {
             form.reset()
             setShowSuccessMessage(true)
         } catch (error) {
-            
+
             console.error(error)
         }
     }
 
     useEffect(() => {
-        if (!isLoading && !isError) {
+        if (isSuccess) {
             form.reset()
+            setShowSuccessMessage(true)
         }
-    }, [isLoading, isError, form])
+    }, [isSuccess, form])
+
 
     useEffect(() => {
-        if (error?.errors) {
-            Object.entries(error.errors).forEach(([field, messages]) => {
-                form.setError(field as any, {
-                    type: 'manual',
-                    message: messages[0],
-                })
+        if (error?.error?.email?.includes('already exists')) {
+            setShowExistingAccountMessage(true)
+            form.setError('email', {
+                type: 'manual',
+                message: 'An account with this email already exists'
             })
         }
     }, [error, form])
@@ -70,9 +76,23 @@ const SignUp: React.FC = () => {
         <>
             <SuccessMessage
                 isOpen={showSuccessMessage}
-                onClose={() => setShowSuccessMessage(false)}
+                onClose={() => {
+                    setShowSuccessMessage(true)
+                    navigate('/')
+                }}
+
                 title="Sign Up Successful!"
                 description="Please check your email inbox and click on the verification link to complete your registration."
+            />
+            <SuccessMessage
+                isOpen={showExistingAccountMessage}
+                onClose={() => {
+                    setShowExistingAccountMessage(false)
+                    navigate('/auth/signin')
+                }}
+                title="Account Already Exists"
+                description='Would you like to sign in instead?'
+
             />
             <div className="h-screen grid grid-cols-1 md:grid-cols-2">
                 <div className="flex items-center justify-center gap-10 font-inter">

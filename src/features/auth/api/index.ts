@@ -29,6 +29,14 @@ export const authApi = {
     },
 
     googleSignIn: () => {
-        window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/login`
+        const backendUrl = import.meta.env.VITE_API_URL
+        // Clear any existing tokens and state
+        localStorage.removeItem('token')
+        sessionStorage.removeItem('googleAuthState')
+
+        // Store the current URL to return to after handling errors
+        sessionStorage.setItem('googleAuthReturnTo', window.location.pathname)
+
+        window.location.href = `${backendUrl}/auth/google/login`
     }
 }

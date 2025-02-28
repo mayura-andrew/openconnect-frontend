@@ -92,3 +92,16 @@ export interface UseGoogleAuthReturn {
     error: ApiError | null
     isSuccess: boolean
 }
+
+export interface SignUpError extends  ApiError {
+    errors?: {
+        email?: string[]
+        name?: string[]
+        password?: string[]
+    }
+}
+
+export interface SignUpValidationError {
+    field: keyof SignUpRequest
+    message: string
+}

@@ -61,12 +61,13 @@ const SignIn: React.FC = () => {
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onLogin)}>
                                 {/* form header */}
-                                <div className="grid gap-6">
+                                <div className="grid git gap-6">
                                     <p className="text-left text-zinc-500">
                                         Dont have an account?
                                         <a href="#" className="text-blue-600 hover:underline ml-1">Sign Up</a>
                                     </p>
-                                    <Button type="button" variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isGoogleLoading}>
+                     Already have an account?Sign In
+               <Button type="button" variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isGoogleLoading}>
                                         {isGoogleLoading ? (
                                             <Spinner />
                                         ) : (
