@@ -66,7 +66,6 @@ const SignIn: React.FC = () => {
                                         Dont have an account?
                                         <a href="#" className="text-blue-600 hover:underline ml-1">Sign Up</a>
                                     </p>
-                     Already have an account?Sign In
                <Button type="button" variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isGoogleLoading}>
                                         {isGoogleLoading ? (
                                             <Spinner />

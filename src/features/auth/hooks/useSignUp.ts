@@ -32,10 +32,10 @@ export const useSignUp = (): UseSignUpReturn => {
             console.log(data)
         },
         onError: (error: any) => {
-            if (error.error?.email) {
+            if (error.error?.email?.includes('already exists')) {
                 toast.error('An account with this email already exists. Please sign in', {
                     duration: 5000,
-                    position: 'top-right'
+                    position: 'top-right',
                 })
             } else {
                 toast.error(error.message || 'Registration failed. Please try again.', {

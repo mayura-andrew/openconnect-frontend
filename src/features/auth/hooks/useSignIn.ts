@@ -23,7 +23,7 @@ export const useSignIn = (): UseSignInReturn => {
                 const response = await authApi.signIn(credentials)
                 return response
             } catch (error: any) {
-                if (error.response?.status === 401) {
+                if (error.response?.data.includes('invalid authentication credentials')) {
                     throw { message: 'Invalid email or password' }
 
                 }
@@ -39,7 +39,7 @@ export const useSignIn = (): UseSignInReturn => {
                 toast.success('Successfully signed in!')
                 navigate('/')
             } else {
-                toast.error('Invalid response from server, Try again later :)' )
+                toast.error('Invalid email or password' )
             }
         },
         onError: (error) => {

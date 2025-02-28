@@ -72,6 +72,8 @@ const SignUp: React.FC = () => {
         }
     }, [error, form])
 
+    
+
     return (
         <>
             <SuccessMessage

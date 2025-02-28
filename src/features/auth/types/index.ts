@@ -28,10 +28,10 @@ export interface ValidationErrors {
 export type SignUpResponse = ApiResponse<User>
 
 export interface ApiError {
-    message: string
-    errors?: ValidationErrors
+  message: string;
+  type?: 'auth_error' | 'validation_error' | 'server_error';
+  errors?: Record<string, string[]>;
 }
-
 export interface SignUpHookResult {
     signUp: (data: SignUpRequest) => void
     isLoading: boolean
