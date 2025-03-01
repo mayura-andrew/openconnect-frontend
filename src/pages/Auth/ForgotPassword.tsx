@@ -11,16 +11,19 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form'
-import { ForgotPwFormSchema } from '@/schemas'
+import { ForgotPasswordFormSchema } from '@/schemas'
 import { useState } from 'react'
-import Spinner from '@/components/Spinner/Spinner.component'
+import Spinner from '@/components/spinner/Spinner.component'
 import { ArrowLeft } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
-export const ForgotPw: React.FC = () => {
+export const ForgotPassword: React.FC = () => {
     const [loading, setLoading] = useState(false)
 
+    const navigate = useNavigate()
+
     const form = useForm({
-        resolver: zodResolver(ForgotPwFormSchema),
+        resolver: zodResolver(ForgotPasswordFormSchema),
         defaultValues: {
             userEmail: '',
         },
@@ -47,6 +50,9 @@ export const ForgotPw: React.FC = () => {
                     <Button
                         variant="link"
                         className="pl-0 py-10 text-black font-semibold text-xs items-center hover:text-blue-800"
+                        onClick={() => {
+                            navigate('/login')
+                        }}
                     >
                         <ArrowLeft />
                         Back to Login

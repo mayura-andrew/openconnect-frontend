@@ -13,9 +13,9 @@ import {
 } from '@/components/ui/form'
 import { ChangePasswordSchema } from '@/schemas'
 import { useState } from 'react'
-import Spinner from '@/components/Spinner/Spinner.component'
+import Spinner from '@/components/spinner/Spinner.component'
 
-export const ChangePw: React.FC = () => {
+export const ChangePassword: React.FC = () => {
     const [loading, setLoading] = useState(false)
 
     const form = useForm({

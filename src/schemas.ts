@@ -7,7 +7,7 @@ export const VerificationFormSchema = z.object({
         .min(26, "Verification Code must be at least 26 characters"),
 });
 
-export const ForgotPwFormSchema = z.object({
+export const ForgotPasswordFormSchema = z.object({
     userEmail: z
         .string()
         .nonempty("Your Email is Required")
@@ -15,6 +15,7 @@ export const ForgotPwFormSchema = z.object({
 });
 
 export const SignUpFormSchema = z.object({
+    username: z.string().min(1, "Required").max(100, "Maximum 50 characters"), 
     email: z.string().email("Invalid email").min(1, "Required"),
     password: z.string().min(8, "Minimum 8 characters").max(100, "Maximum 100 characters"),
 })

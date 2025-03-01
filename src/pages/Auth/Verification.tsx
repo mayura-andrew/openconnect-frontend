@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/form'
 import { VerificationFormSchema } from '@/schemas'
 import { useState } from 'react'
-import Spinner from '@/components/Spinner/Spinner.component'
+import Spinner from '@/components/spinner/Spinner.component'
 
 const Verification: React.FC = () => {
     const [loading, setLoading] = useState(false)
