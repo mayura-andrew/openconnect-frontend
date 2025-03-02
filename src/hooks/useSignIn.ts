@@ -22,18 +22,21 @@ export const useSignIn = (): UseSignInReturn => {
             try {
                 const response = await authApi.signIn(credentials)
                 return response
-            } catch (error: unknown ) {
+            } catch (error: unknown) {
+                const apiError = error as ApiError
 
-                const apiError = error as ApiError;
-
-                if (apiError.error?.data?.includes('invalid authentication credentials')) {
+                if (
+                    apiError.error?.data?.includes(
+                        'invalid authentication credentials'
+                    )
+                ) {
                     throw { message: 'Invalid email or password' }
                 }
-                
+
                 if (apiError.error?.data) {
                     throw apiError.error.data
                 }
-                
+
                 throw { message: 'An unexpected error occurred' }
             }
         },
@@ -43,15 +46,19 @@ export const useSignIn = (): UseSignInReturn => {
                 toast.success('Successfully signed in!')
                 navigate('/')
             } else {
-                toast.error('Invalid email or password' )
+                toast.error('Invalid email or password')
             }
         },
         onError: (error) => {
             if (error.error) {
                 Object.entries(error.error).forEach(([field, messages]) => {
-                    messages.forEach((message) => {
-                        toast.error(`${field}: ${message}`)
-                    })
+                    if (Array.isArray(messages)) {
+                        messages.forEach((message) => {
+                            toast.error(`${field}: ${message}`)
+                        })
+                    } else if (typeof messages === 'string') {
+                        toast.error(`${field}: ${messages}`)
+                    }
                 })
             } else {
                 toast.error(error.message || 'Invalid email or password')

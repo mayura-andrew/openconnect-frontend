@@ -1,11 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom'
 import Home from './pages/Home'
-import SignIn  from './pages/Auth/SignIn'
-import  SignUp  from './pages/Auth/SignUp'
+import SignIn from './pages/Auth/SignIn'
+import SignUp from './pages/Auth/SignUp'
 import { ForgotPassword } from './pages/Auth/ForgotPassword'
-import { ChangePassword } from './pages/Auth/ChangePassword'
-import  Activation from './pages/Auth/Activation'
-import GoogleCallback  from './pages/Auth/GoogleCallback'
+import { ResetPassword } from './pages/Auth/ResetPassword'
+import Activation from './pages/Auth/Activation'
+import GoogleCallback from './pages/Auth/GoogleCallback'
 
 export const router = createBrowserRouter([
     {
@@ -20,20 +20,20 @@ export const router = createBrowserRouter([
     },
     // Auth routes (separate from main layout)
     {
-        path: '/login',
+        path: '/auth/login',
         element: <SignIn />,
     },
     {
-        path: '/signup',
+        path: '/auth/signup',
         element: <SignUp />,
     },
     {
-        path: '/forgot-password',
+        path: '/auth/forgot-password',
         element: <ForgotPassword />,
     },
     {
-        path: '/reset-password',
-        element: <ChangePassword />,
+        path: '/auth/reset-password',
+        element: <ResetPassword />,
     },
     {
         path: '/auth/activate',

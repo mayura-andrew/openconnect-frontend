@@ -19,7 +19,7 @@ export const useActivation = (): UseActivationReturn => {
         },
         onError: (error) => {
             toast.error(error.message || 'Failed to activate account')
-        }
+        },
     })
 
     return {
@@ -27,6 +27,6 @@ export const useActivation = (): UseActivationReturn => {
         isLoading: isPending,
         isError,
         error,
-        isSuccess
+        isSuccess,
     }
 }

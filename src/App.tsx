@@ -9,10 +9,10 @@ import { Toaster } from './components/common/Toaster.component'
 export function App() {
     return (
         <QueryProvider>
-        <AppProvider>
-            <RouterProvider router={router} />
-            <Toaster />
-        </AppProvider>
+            <AppProvider>
+                <RouterProvider router={router} />
+                <Toaster />
+            </AppProvider>
         </QueryProvider>
     )
 }

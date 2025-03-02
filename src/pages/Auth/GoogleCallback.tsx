@@ -21,8 +21,9 @@ const GoogleCallback = () => {
                     if (errors.email?.includes('already exists')) {
                         return {
                             title: 'Account Already Exists',
-                            message: 'An account with this email already exists. Please sign in with your password.',
-                            action: '/auth/signin'
+                            message:
+                                'An account with this email already exists. Please sign in with your password.',
+                            action: '/auth/signin',
                         }
                     }
                 } catch (e) {
@@ -33,7 +34,7 @@ const GoogleCallback = () => {
             return {
                 title: 'Authentication Failed',
                 message: error || 'Something went wrong during authentication.',
-                action: '/auth/signin'
+                action: '/auth/signin',
             }
         }
 
@@ -41,15 +42,15 @@ const GoogleCallback = () => {
             localStorage.setItem('token', token)
             toast.success('Successfully signed in with Google!', {
                 duration: 4000,
-                position: 'top-right'
+                position: 'top-right',
             })
             navigate('/', { replace: true })
         } else if (error || validationErrors) {
             const { title, message, action } = handleError()
-            toast.error( message, {
+            toast.error(message, {
                 duration: 5000,
-                position: 'top-right'
-            },)
+                position: 'top-right',
+            })
             setTimeout(() => {
                 navigate(action, { replace: true })
             }, 100)

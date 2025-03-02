@@ -1,3 +1,4 @@
+// src/hooks/useSignUp.ts
 import { toast } from 'react-hot-toast'
 import { useMutation } from '@tanstack/react-query'
 import { authApi } from '../api'
@@ -14,30 +15,27 @@ export const useSignUp = (): UseSignUpReturn => {
         ApiError,
         SignUpRequest
     >({
-        mutationFn: (data: SignUpRequest) => authApi.signUp(data),
-        onSuccess: () => {
-            toast.success(
-                'Registration successful! Please check your email for verification.', {
-                    duration: 5000,
-                    position: 'top-right'
-                }
-            )
+        mutationFn: async (data: SignUpRequest) => {
+            return authApi.signUp(data)
+        },
+        onSuccess: (data) => {
+            if (data.user.email) {
+                toast.success('Successfully signed up!')
+            } else {
+                toast.error('An unexpected error occurred')
+            }
         },
         onError: (error: ApiError) => {
-            // Only show toast for errors other than 'email already exists'
-            const isEmailExistsError = 
-                error.error?.email && 
-                Array.isArray(error.error.email) && 
-                error.error.email.some(msg => msg.includes('already exists'));
-            
+            const emailError = error?.error?.email
+            const isEmailExistsError =
+                typeof emailError === 'string' &&
+                emailError.includes('already exists')
+
             if (!isEmailExistsError) {
-                toast.error(error.message || 'Failed to create account', {
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast.error(error.message || 'An unexpected error occurred')
             }
-        }
-    });
+        },
+    })
 
     return {
         signUp: mutate,

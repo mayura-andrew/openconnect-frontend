@@ -22,6 +22,6 @@ export const useGoogleAuth = (): UseGoogleAuthReturn => {
         isLoading,
         isError: false,
         error: null,
-        isSuccess: false
+        isSuccess: false,
     }
 }

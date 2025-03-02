@@ -23,9 +23,11 @@ import { useGoogleAuth } from '@/hooks/useGoogleOAuth'
 const SignUp: React.FC = () => {
     const { signUp, isLoading, isError, error, isSuccess } = useSignUp()
     const [showSuccessMessage, setShowSuccessMessage] = useState(false)
-    const [showExistingAccountMessage, setShowExistingAccountMessage] = useState(false)
-    const { googleSignIn, isLoading: isGoogleLoading } =  useGoogleAuth()
-    const  navigate = useNavigate()
+    const [showExistingAccountMessage, setShowExistingAccountMessage] =
+        useState(false)
+    const { googleSignIn, isLoading: isGoogleLoading } = useGoogleAuth()
+    const [existingEmail, setExistingEmail] = useState('')
+    const navigate = useNavigate()
 
     const handleGoogleSignIn = () => {
         googleSignIn()
@@ -45,11 +47,11 @@ const SignUp: React.FC = () => {
         username: string
         password: string
     }) => {
-            await signUp({
-                email: values.email,
-                name: values.username,
-                password: values.password,
-            })        
+        await signUp({
+            email: values.email,
+            username: values.username,
+            password: values.password,
+        })
     }
 
     useEffect(() => {
@@ -61,15 +63,19 @@ const SignUp: React.FC = () => {
 
     useEffect(() => {
         if (isError && error?.error?.email) {
-            const emailErrors = error.error.email
-            const emailExists = Array.isArray(emailErrors) && 
-                               emailErrors.some(msg => msg.includes('already exists'))
-            
-            if (emailExists) {
+            const emailError = error.error.email
+            const isEmailExistsError =
+                (typeof emailError === 'string' &&
+                    emailError.includes('already exists')) ||
+                (Array.isArray(emailError) &&
+                    emailError.some((msg) => msg.includes('already exists')))
+
+            if (isEmailExistsError) {
+                setExistingEmail(form.getValues('email'))
                 setShowExistingAccountMessage(true)
                 form.setError('email', {
                     type: 'manual',
-                    message: 'An account with this email already exists'
+                    message: 'An account with this email already exists',
                 })
             }
         }
@@ -83,9 +89,8 @@ const SignUp: React.FC = () => {
                     setShowSuccessMessage(false)
                     navigate('/')
                 }}
-
                 title="Sign Up Successful!"
-                description="Please check your email inbox and click on the verification link to complete your registration."
+                description=""
             />
             <SuccessMessage
                 isOpen={showExistingAccountMessage}
@@ -94,8 +99,8 @@ const SignUp: React.FC = () => {
                     navigate('/auth/signin')
                 }}
                 title="Account Already Exists"
-                description='Would you like to sign in instead?'
-
+                description="Would you like to sign in instead?"
+                email={existingEmail}
             />
             <div className="h-screen grid grid-cols-1 md:grid-cols-2">
                 <div className="flex items-center justify-center gap-10 font-inter">
@@ -124,7 +129,13 @@ const SignUp: React.FC = () => {
                                             Sign In
                                         </a>
                                     </p>
-                                    <Button type="button" variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isGoogleLoading}>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        className="w-full"
+                                        onClick={handleGoogleSignIn}
+                                        disabled={isGoogleLoading}
+                                    >
                                         {isGoogleLoading ? (
                                             <Spinner />
                                         ) : (
