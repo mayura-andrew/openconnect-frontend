@@ -1,10 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { ChevronRight, Users, Globe, Lightbulb, Calendar } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '@/context/AuthContext'
 
 const Home: React.FC = () => {
     const navigate = useNavigate()
+    const { isAuthenticated, hasCompletedOnboarding } = useAuth()
+  
+  useEffect(() => {
+    // If authenticated, direct users to the appropriate page
+    if (isAuthenticated) {
+      if (!hasCompletedOnboarding) {
+        navigate('/onboarding')
+      } else {
+        navigate('/profile')
+      }
+    }
+  }, [isAuthenticated, hasCompletedOnboarding, navigate])
+  
     return (
         <div className="flex flex-col min-h-screen">
             {/* Hero Section */}

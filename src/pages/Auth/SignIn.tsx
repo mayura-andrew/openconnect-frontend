@@ -17,9 +17,11 @@ import SignInImage from '@/assets/images/auth/SignInImage.svg'
 import { useSignIn } from '@/hooks/useSignIn.ts'
 import { SignInCredentials } from '@/types'
 import { useGoogleAuth } from '@/hooks/useGoogleOAuth.ts'
+import { useAuth } from '@/context/AuthContext'
 
 const SignIn: React.FC = () => {
-    const { signIn, isLoading } = useSignIn()
+    const { login, isLoading } = useAuth();
+
     const { googleSignIn, isLoading: isGoogleLoading } = useGoogleAuth()
 
     const handleGoogleSignIn = () => {
@@ -34,7 +36,12 @@ const SignIn: React.FC = () => {
     })
 
     const onLogin = async (credentials: SignInCredentials) => {
-        signIn(credentials)
+        try {
+            await login(credentials.email, credentials.password)
+        } catch (error) {
+            console.erro('Login failed', error)
+
+        }
     }
 
     return (

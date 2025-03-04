@@ -1,76 +1,56 @@
-import { toast } from 'react-hot-toast'
-import { useMutation } from '@tanstack/react-query'
+// src/hooks/useSignIn.ts
+import { useAuth } from '@/context/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { authApi } from '../api'
-import {
-    SignInCredentials,
-    SignInResponse,
-    ApiError,
-    UseSignInReturn,
-} from '../types'
+import { 
+  SignInCredentials, 
+  ApiError,
+  UseSignInReturn
+} from '@/types'
+import { useState } from 'react'
+import toast from 'react-hot-toast'
 
 export const useSignIn = (): UseSignInReturn => {
-    const navigate = useNavigate()
-
-    const { mutate, isPending, isError, error, isSuccess, reset } = useMutation<
-        SignInResponse,
-        ApiError,
-        SignInCredentials,
-        unknown
-    >({
-        mutationFn: async (credentials: SignInCredentials) => {
-            try {
-                const response = await authApi.signIn(credentials)
-                return response
-            } catch (error: unknown) {
-                const apiError = error as ApiError
-
-                if (
-                    apiError.error?.data?.includes(
-                        'invalid authentication credentials'
-                    )
-                ) {
-                    throw { message: 'Invalid email or password' }
-                }
-
-                if (apiError.error?.data) {
-                    throw apiError.error.data
-                }
-
-                throw { message: 'An unexpected error occurred' }
-            }
-        },
-        onSuccess: (data) => {
-            if (data.authentication_token?.token) {
-                localStorage.setItem('token', data.authentication_token.token)
-                toast.success('Successfully signed in!')
-                navigate('/')
-            } else {
-                toast.error('Invalid email or password')
-            }
-        },
-        onError: (error) => {
-            if (error.error) {
-                Object.entries(error.error).forEach(([field, messages]) => {
-                    if (Array.isArray(messages)) {
-                        messages.forEach((message) => {
-                            toast.error(`${field}: ${message}`)
-                        })
-                    } else if (typeof messages === 'string') {
-                        toast.error(`${field}: ${messages}`)
-                    }
-                })
-            } else {
-                toast.error(error.message || 'Invalid email or password')
-            }
-        },
-    })
-    return {
-        signIn: mutate,
-        isLoading: isPending,
-        isError,
-        error,
-        isSuccess,
-        reset,
+  const { login, isLoading } = useAuth()
+  const navigate = useNavigate()
+  const [isError, setIsError] = useState(false)
+  const [error, setError] = useState<ApiError | null>(null)
+  const [isSuccess, setIsSuccess] = useState(false)
+  
+  const signIn = async (credentials: SignInCredentials) => {
+    setIsError(false)
+    setError(null)
+    
+    try {
+      const user = await login(credentials.email, credentials.password)
+      setIsSuccess(true)
+      
+      // Navigate user based on their onboarding status
+      if (!user.hasCompletedProfile) {
+        navigate('/onboarding')
+      } else {
+        navigate('/profile')
+      }
+      
+      return user
+    } catch (err: any) {
+      setIsError(true)
+      setError(err)
+      throw err
     }
+  }
+  
+  const reset = () => {
+    setIsError(false)
+    setError(null)
+    setIsSuccess(false)
+  }
+
+  return {
+    signIn,
+    isLoading,
+    isError,
+    error,
+    isSuccess,
+    reset,
+  }
 }

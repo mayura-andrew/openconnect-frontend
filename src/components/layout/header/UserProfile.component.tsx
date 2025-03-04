@@ -8,6 +8,8 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { navigationItems } from './navigation-config'
+import { useAuth } from '@/context/AuthContext'
+
 
 interface UserProfileProps {
     user: {
