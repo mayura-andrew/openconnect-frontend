@@ -39,7 +39,7 @@ const SignIn: React.FC = () => {
         try {
             await login(credentials.email, credentials.password)
         } catch (error) {
-            console.erro('Login failed', error)
+            console.error('Login failed', error)
 
         }
     }

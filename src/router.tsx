@@ -17,6 +17,7 @@ import MySubmissions from './components/layout/MySubmissions'
 import { ViewOtherUsersIdeas } from './components/layout/ViewOtherUsersIdeas'
 import toast from 'react-hot-toast'
 import { useEffect } from 'react'
+import { LoadingScreen } from '@/components/common/LoadingScreen'
 
 // Protected route component
 const ProtectedRoute = ({ 
@@ -33,7 +34,7 @@ const ProtectedRoute = ({
   if (isLoading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
-        <Spinner />
+         <LoadingScreen message="OpenConnect" />
       </div>
     );
   }

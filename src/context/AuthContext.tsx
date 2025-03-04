@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import { authApi, profileApi } from '@/api'
 import toast from 'react-hot-toast'
 import { User } from '@/types'
-
+import { LoadingScreen } from '@/components/common/LoadingScreen'
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
   logout: () => void;
   signup: (email: string, password: string, username: string) => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<User>;
@@ -101,6 +101,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem('token')
     setUser(null)
     navigate('/auth/login')
+  }
+  if (isLoading) {
+    return <LoadingScreen message="Setting up your experience..." />
   }
 
   return (
