@@ -1,31 +1,25 @@
-import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { profileApi } from '@/api'
-import { LoadingScreen } from '@/components/common/LoadingScreen'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { Github, Linkedin, Facebook, ArrowLeft, Mail, Phone, MapPin, Briefcase, BookOpen, School } from 'lucide-react'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { AlertCircle } from 'lucide-react'
-import { UserProfileWithIdeas } from '@/types'
+import { useParams, useNavigate } from 'react-router-dom';
+import { useUserProfileDetails } from '@/hooks/useUserProfileDetails';
+import { LoadingScreen } from '@/components/common/LoadingScreen';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Github, Linkedin, Facebook, ArrowLeft, Mail, Phone, MapPin, Briefcase, BookOpen, School } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
 
 const UserProfilePage = () => {
     const { userId } = useParams<{ userId: string }>();
     const navigate = useNavigate();
     
-    const { data: user, isLoading, error } = useQuery({
-        queryKey: ['user-profile', userId],
-        queryFn: async () => {
-            // You'll need to implement this API method
-            const response = await profileApi.getUserProfileById(userId as string);
-            return response;
-        },
-        enabled: !!userId,
-    });
+    const { 
+        data: user, 
+        isLoading, 
+        isError, 
+        error 
+    } = useUserProfileDetails(userId);
     
     const handleBack = () => {
         navigate(-1);
@@ -35,7 +29,7 @@ const UserProfilePage = () => {
         return <LoadingScreen message="Loading profile..." />;
     }
     
-    if (error || !user) {
+    if (isError || !user) {
         return (
             <div className="container mx-auto p-6">
                 <Alert variant="destructive">
@@ -63,7 +57,7 @@ const UserProfilePage = () => {
     
     // Avatar source
     const avatarSrc = user.avatarURL 
-        ? `${import.meta.env.VITE_API_URL}${user.avatarURL}` 
+        ? `${import.meta.env.VITE_API_URL}avatars${user.avatarURL}` 
         : user.image;
 
     return (
@@ -110,6 +104,9 @@ const UserProfilePage = () => {
                                     <BookOpen className="h-4 w-4 mr-2" /> Education
                                 </h3>
                                 <div className="text-sm space-y-2">
+                                    {user.degree && (
+                                        <p className="font-medium">{user.degree}</p>
+                                    )}
                                     {user.uni && (
                                         <p>{user.uni}</p>
                                     )}
@@ -118,6 +115,9 @@ const UserProfilePage = () => {
                                     )}
                                     {user.program && (
                                         <p className="text-muted-foreground">{user.program}</p>
+                                    )}
+                                    {user.year && (
+                                        <p className="text-muted-foreground">Year: {user.year}</p>
                                     )}
                                 </div>
                             </div>
@@ -194,8 +194,11 @@ const UserProfilePage = () => {
                     
                     {/* Ideas */}
                     <Card>
-                        <CardHeader>
+                        <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle className="text-lg">Projects & Ideas</CardTitle>
+                            <Badge variant="outline">
+                                {user.ideas_count || user.ideas?.length || 0} {user.ideas?.length === 1 ? 'Idea' : 'Ideas'}
+                            </Badge>
                         </CardHeader>
                         <CardContent>
                             {user.ideas && user.ideas.length > 0 ? (
@@ -213,6 +216,9 @@ const UserProfilePage = () => {
                                                     </Badge>
                                                 ))}
                                             </div>
+                                            <p className="text-xs text-muted-foreground mt-3">
+                                                {new Date(idea.created_at).toLocaleDateString()}
+                                            </p>
                                         </Card>
                                     ))}
                                 </div>

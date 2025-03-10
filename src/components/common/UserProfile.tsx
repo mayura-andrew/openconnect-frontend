@@ -61,7 +61,7 @@ const UserProfilePage = () => {
     
     // Avatar source
     const avatarSrc = user.avatarURL 
-        ? `${import.meta.env.VITE_API_URL}${user.avatarURL}` 
+        ? `${import.meta.env.VITE_API_URL}avatars${user.avatarURL}` 
         : user.image;
 
     return (
