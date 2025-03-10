@@ -17,22 +17,26 @@ import { Github, Linkedin, Facebook } from 'lucide-react'
 import { UserProfile } from '@/types'
 
 export const ProfileCard = ({ user }: { user: UserProfile }) => {
-    const navigate = useNavigate();
-    const displayName = user.name || `${user.firstname || ''} ${user.lastname || ''}`.trim() || user.username || 'User';
-    
+    const navigate = useNavigate()
+    const displayName =
+        user.name ||
+        `${user.firstname || ''} ${user.lastname || ''}`.trim() ||
+        user.username ||
+        'User'
+
     const initials = displayName
         .split(' ')
-        .map(n => n[0])
+        .map((n) => n[0])
         .join('')
-        .toUpperCase();
-        
-    const avatarSrc = user.avatarURL 
-        ? `${import.meta.env.VITE_API_URL}/avatars/${user.avatar}` 
-        : user.image;
-        
+        .toUpperCase()
+
+    const avatarSrc = user.avatarURL
+        ? `${import.meta.env.VITE_API_URL}/avatars/${user.avatar}`
+        : user.image
+
     const handleViewProfile = () => {
-        navigate(`/profile/${user.id}`);
-    };
+        navigate(`/profile/${user.id}`)
+    }
 
     return (
         <Card className="hover:shadow-lg transition-shadow h-full flex flex-col">
@@ -67,20 +71,35 @@ export const ProfileCard = ({ user }: { user: UserProfile }) => {
                         <p>{user.faculty}</p>
                         <p className="text-muted-foreground">{user.program}</p>
                     </div>
-                    
+
                     <div className="flex space-x-2 pt-2">
                         {user.github && (
-                            <a href={user.github} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-700">
+                            <a
+                                href={user.github}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gray-500 hover:text-gray-700"
+                            >
                                 <Github size={16} />
                             </a>
                         )}
                         {user.linkedin && (
-                            <a href={user.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-700">
+                            <a
+                                href={user.linkedin}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gray-500 hover:text-gray-700"
+                            >
                                 <Linkedin size={16} />
                             </a>
                         )}
                         {user.fb && (
-                            <a href={user.fb} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-700">
+                            <a
+                                href={user.fb}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gray-500 hover:text-gray-700"
+                            >
                                 <Facebook size={16} />
                             </a>
                         )}
@@ -91,7 +110,7 @@ export const ProfileCard = ({ user }: { user: UserProfile }) => {
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button 
+                            <Button
                                 className="w-full"
                                 onClick={handleViewProfile}
                             >

@@ -3,16 +3,20 @@ import { useProfilesWithIdeas } from '@/hooks/useProfilesWithIdeas'
 import { LoadingScreen } from '@/components/common/LoadingScreen'
 import { GridLayout } from '@/components/layout/GridLayout.component'
 import { Input } from '@/components/ui/input'
-import { 
-    Select, 
-    SelectContent, 
-    SelectItem, 
-    SelectTrigger, 
-    SelectValue 
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { ErrorState, NoProfilesFound, NoResultsFound } from '@/components/common/EmptyState.component'
+import {
+    ErrorState,
+    NoProfilesFound,
+    NoResultsFound,
+} from '@/components/common/EmptyState.component'
 
 const Community: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('')
@@ -22,62 +26,66 @@ const Community: React.FC = () => {
     const limit = 20
     const offset = (currentPage - 1) * limit
 
-    const { 
-        data, 
-        isLoading, 
-        error, 
-        refetch 
-    } = useProfilesWithIdeas(limit, offset)
+    const { data, isLoading, error, refetch } = useProfilesWithIdeas(
+        limit,
+        offset
+    )
 
     // Reset filters and search
     const resetFilters = () => {
-        setSearchQuery('');
-        setFacultyFilter('all');
-        setSortBy('name');
-    };
+        setSearchQuery('')
+        setFacultyFilter('all')
+        setSortBy('name')
+    }
 
     // Handle search, filtering, and sorting
     const filteredProfiles = useMemo(() => {
-        if (!data?.profiles) return [];
-        
-        return data.profiles.filter(user => {
-            // Search by name, title, skills, or bio
-            const searchLower = searchQuery.toLowerCase();
-            
-            const matchesSearch = !searchQuery || 
-                (user.name || '').toLowerCase().includes(searchLower) || 
-                (user.title || '').toLowerCase().includes(searchLower) ||
-                (user.bio || '').toLowerCase().includes(searchLower) ||
-                user.skills?.some(skill => skill.toLowerCase().includes(searchLower));
-            
-            // Filter by faculty
-            const matchesFaculty = 
-                facultyFilter === 'all' || 
-                (user.faculty || '').toLowerCase() === facultyFilter.toLowerCase();
-            
-            return matchesSearch && matchesFaculty;
-        }).sort((a, b) => {
-            // Sort by selected criteria
-            switch (sortBy) {
-                case 'name':
-                    return (a.name || '').localeCompare(b.name || '');
-                default:
-                    return 0;
-            }
-        });
-    }, [data, searchQuery, facultyFilter, sortBy]);
+        if (!data?.profiles) return []
+
+        return data.profiles
+            .filter((user) => {
+                // Search by name, title, skills, or bio
+                const searchLower = searchQuery.toLowerCase()
+
+                const matchesSearch =
+                    !searchQuery ||
+                    (user.name || '').toLowerCase().includes(searchLower) ||
+                    (user.title || '').toLowerCase().includes(searchLower) ||
+                    (user.bio || '').toLowerCase().includes(searchLower) ||
+                    user.skills?.some((skill) =>
+                        skill.toLowerCase().includes(searchLower)
+                    )
+
+                // Filter by faculty
+                const matchesFaculty =
+                    facultyFilter === 'all' ||
+                    (user.faculty || '').toLowerCase() ===
+                        facultyFilter.toLowerCase()
+
+                return matchesSearch && matchesFaculty
+            })
+            .sort((a, b) => {
+                // Sort by selected criteria
+                switch (sortBy) {
+                    case 'name':
+                        return (a.name || '').localeCompare(b.name || '')
+                    default:
+                        return 0
+                }
+            })
+    }, [data, searchQuery, facultyFilter, sortBy])
 
     // Extract unique faculties for filter dropdown
     const faculties = useMemo(() => {
-        if (!data?.profiles) return [];
-        
-        const facultySet = new Set<string>();
-        data.profiles.forEach(user => {
-            if (user.faculty) facultySet.add(user.faculty);
-        });
-        
-        return Array.from(facultySet);
-    }, [data?.profiles]);
+        if (!data?.profiles) return []
+
+        const facultySet = new Set<string>()
+        data.profiles.forEach((user) => {
+            if (user.faculty) facultySet.add(user.faculty)
+        })
+
+        return Array.from(facultySet)
+    }, [data?.profiles])
 
     // If loading, show spinner
     if (isLoading) {
@@ -115,7 +123,7 @@ const Community: React.FC = () => {
                         Connect with other professionals in your network
                     </p>
                 </div>
-                
+
                 {/* Search and filter section */}
                 <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
                     <div className="w-full md:w-1/3">
@@ -126,29 +134,28 @@ const Community: React.FC = () => {
                             className="w-full"
                         />
                     </div>
-                    
+
                     <div className="flex gap-3 w-full md:w-auto">
-                        <Select 
-                            value={facultyFilter} 
+                        <Select
+                            value={facultyFilter}
                             onValueChange={setFacultyFilter}
                         >
                             <SelectTrigger className="w-full md:w-[180px]">
                                 <SelectValue placeholder="Filter by Faculty" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">All Faculties</SelectItem>
-                                {faculties.map(faculty => (
+                                <SelectItem value="all">
+                                    All Faculties
+                                </SelectItem>
+                                {faculties.map((faculty) => (
                                     <SelectItem key={faculty} value={faculty}>
                                         {faculty}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
-                        
-                        <Select 
-                            value={sortBy} 
-                            onValueChange={setSortBy}
-                        >
+
+                        <Select value={sortBy} onValueChange={setSortBy}>
                             <SelectTrigger className="w-full md:w-[150px]">
                                 <SelectValue placeholder="Sort By" />
                             </SelectTrigger>
@@ -158,14 +165,15 @@ const Community: React.FC = () => {
                         </Select>
                     </div>
                 </div>
-                
+
                 <Separator className="my-2" />
-                
+
                 {/* Results count */}
                 <div className="text-sm text-gray-500">
-                    Showing {filteredProfiles.length} of {data?.count || 0} members
+                    Showing {filteredProfiles.length} of {data?.count || 0}{' '}
+                    members
                 </div>
-                
+
                 {/* Profile cards grid or empty state */}
                 {filteredProfiles.length > 0 ? (
                     <GridLayout users={filteredProfiles} />
@@ -174,24 +182,24 @@ const Community: React.FC = () => {
                         <NoResultsFound onReset={resetFilters} />
                     </div>
                 )}
-                
+
                 {/* Pagination */}
                 {data?.count && data.count > limit && (
                     <div className="flex justify-center mt-8">
                         <div className="flex gap-2">
-                            <Button 
-                                variant="outline" 
-                                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                            <Button
+                                variant="outline"
+                                onClick={() =>
+                                    setCurrentPage((p) => Math.max(1, p - 1))
+                                }
                                 disabled={currentPage === 1}
                             >
                                 Previous
                             </Button>
-                            <Button variant="outline">
-                                {currentPage}
-                            </Button>
-                            <Button 
+                            <Button variant="outline">{currentPage}</Button>
+                            <Button
                                 variant="outline"
-                                onClick={() => setCurrentPage(p => p + 1)}
+                                onClick={() => setCurrentPage((p) => p + 1)}
                                 disabled={currentPage * limit >= data.count}
                             >
                                 Next

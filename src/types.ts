@@ -25,41 +25,41 @@ export interface UserProfile {
 
 // The backend API response structure
 export interface ProfileWithIdeasResponse {
-  profiles: {
-    profile: {
-      id: string
-      username?: string
-      email?: string
-      user_type?: string
-      firstname?: string
-      lastname?: string
-      year?: string
-      avatar?: string
-      avatar_url?: string
-      title?: string
-      bio?: string
-      faculty?: string
-      program?: string
-      degree?: string
-      uni?: string
-      mobile?: string
-      linkedin?: string
-      github?: string
-      fb?: string
-      skills: string[]
-      has_completed_profile?: boolean
-      created_at?: string
-      updated_at?: string
-    };
-    ideas: Idea[];
-  }[];
-  count: number;
+    profiles: {
+        profile: {
+            id: string
+            username?: string
+            email?: string
+            user_type?: string
+            firstname?: string
+            lastname?: string
+            year?: string
+            avatar?: string
+            avatar_url?: string
+            title?: string
+            bio?: string
+            faculty?: string
+            program?: string
+            degree?: string
+            uni?: string
+            mobile?: string
+            linkedin?: string
+            github?: string
+            fb?: string
+            skills: string[]
+            has_completed_profile?: boolean
+            created_at?: string
+            updated_at?: string
+        }
+        ideas: Idea[]
+    }[]
+    count: number
 }
 
 // What we transform the API response into for our components
 export interface TransformedProfilesResponse {
-  profiles: UserProfile[];
-  count: number;
+    profiles: UserProfile[]
+    count: number
 }
 
 export interface User {
@@ -314,70 +314,69 @@ export interface SuccessMessageModalProps extends SuccessMessageProps {
 
 // First, update the Idea interface to match what's coming from the backend
 export interface Idea {
-    id: string;
-    title: string;
-    description: string;
-    created_at: string;
-    updated_at: string;
-    user_id: string;
-    idea_source_id: string;
-    pdf?: string;
-    category: string;
-    tags: string[];
-    status: string;
-    learning_outcome?: string;
-    recommended_level?: string;
-    github_link?: string;
-    website_link?: string;
-    version: number;
+    id: string
+    title: string
+    description: string
+    created_at: string
+    updated_at: string
+    user_id: string
+    idea_source_id: string
+    pdf?: string
+    category: string
+    tags: string[]
+    status: string
+    learning_outcome?: string
+    recommended_level?: string
+    github_link?: string
+    website_link?: string
+    version: number
 }
 
 // Create an interface for the user profile API response
 export interface UserProfileDetailResponse {
     response: {
-        avatarURL: string;
-        ideas: Idea[];
-        ideas_count: number;
-        limit: number;
-        offset: number;
+        avatarURL: string
+        ideas: Idea[]
+        ideas_count: number
+        limit: number
+        offset: number
         profile: {
-            id: string;
-            username: string;
-            email: string;
-            user_type: string;
-            firstname?: string;
-            lastname?: string;
-            year?: string;
-            avatar?: string;
-            avatar_url?: string;
-            title?: string;
-            bio?: string;
-            faculty?: string;
-            program?: string;
-            degree?: string;
-            uni?: string;
-            mobile?: string;
-            linkedin?: string;
-            github?: string;
-            fb?: string;
-            skills: string[];
-            has_completed_profile: boolean;
-            created_at: string;
-            updated_at: string;
+            id: string
+            username: string
+            email: string
+            user_type: string
+            firstname?: string
+            lastname?: string
+            year?: string
+            avatar?: string
+            avatar_url?: string
+            title?: string
+            bio?: string
+            faculty?: string
+            program?: string
+            degree?: string
+            uni?: string
+            mobile?: string
+            linkedin?: string
+            github?: string
+            fb?: string
+            skills: string[]
+            has_completed_profile: boolean
+            created_at: string
+            updated_at: string
         }
     }
 }
 
 // Extend the UserProfileWithIdeas to include additional fields from the response
 export interface UserProfileWithIdeas extends UserProfile {
-    ideas: Idea[];
-    ideas_count?: number;
-    degree?: string;
-    uni?: string;
-    mobile?: string;
-    created_at?: string;
-    updated_at?: string;
-    has_completed_profile?: boolean;
-    user_type?: string;
+    ideas: Idea[]
+    ideas_count?: number
+    degree?: string
+    uni?: string
+    mobile?: string
+    created_at?: string
+    updated_at?: string
+    has_completed_profile?: boolean
+    user_type?: string
 }
-

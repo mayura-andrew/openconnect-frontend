@@ -208,7 +208,10 @@ export const profileApi = {
         return response.data.profile
     },
 
-    getProfilesWithIdeas: async (limit: number, offset: number = 0): Promise<ProfileWithIdeasResponse> => {
+    getProfilesWithIdeas: async (
+        limit: number,
+        offset: number = 0
+    ): Promise<ProfileWithIdeasResponse> => {
         const response = await axiosInstance.get<ProfileWithIdeasResponse>(
             '/profiles-with-ideas',
             {
@@ -218,16 +221,19 @@ export const profileApi = {
         return response.data
     },
 
-        
-    getUserProfileById: async (userId: string): Promise<UserProfileWithIdeas> => {
+    getUserProfileById: async (
+        userId: string
+    ): Promise<UserProfileWithIdeas> => {
         try {
-            const response = await axiosInstance.get<UserProfileDetailResponse>(`/profiles/id/${userId}`);
-            
+            const response = await axiosInstance.get<UserProfileDetailResponse>(
+                `/profiles/id/${userId}`
+            )
+
             // Access the correct nested structure
-            const profileData = response.data.response;
-            const profile = profileData.profile;
-            const ideas = profileData.ideas || [];
-            
+            const profileData = response.data.response
+            const profile = profileData.profile
+            const ideas = profileData.ideas || []
+
             // Create a complete user profile with ideas
             const userProfile: UserProfileWithIdeas = {
                 id: profile.id,
@@ -256,40 +262,39 @@ export const profileApi = {
                 created_at: profile.created_at,
                 updated_at: profile.updated_at,
                 has_completed_profile: profile.has_completed_profile,
-                user_type: profile.user_type
-            };
-            
-            return userProfile;
+                user_type: profile.user_type,
+            }
+
+            return userProfile
         } catch (error) {
-            console.error("Error fetching user profile:", error);
-            throw error;
+            console.error('Error fetching user profile:', error)
+            throw error
         }
-    }
-
+    },
 }
-    // uploadProfileImage: async (file: File): Promise<{url: string}> => {
-    //     const formData = new FormData()
-    //     formData.append('avatar', file)
-    //     const response = await axiosInstance.post('/user/profile/avatar', formData)
-    //     return response.data
-    // },
+// uploadProfileImage: async (file: File): Promise<{url: string}> => {
+//     const formData = new FormData()
+//     formData.append('avatar', file)
+//     const response = await axiosInstance.post('/user/profile/avatar', formData)
+//     return response.data
+// },
 
-    // updateSkills: async (skills: strings[]): Promise<User> => {
-    //     const response = await axiosInstance.put('/user/profile/skills', {skills})
-    //     return response.data
-    // },
+// updateSkills: async (skills: strings[]): Promise<User> => {
+//     const response = await axiosInstance.put('/user/profile/skills', {skills})
+//     return response.data
+// },
 
-    // getProfileByUsername: async (username: string): Promise<User> => {
-    //     const response = await axiosInstance.get<User>(`/users/profile/${username}`)
-    //     return response.data
-    // }
+// getProfileByUsername: async (username: string): Promise<User> => {
+//     const response = await axiosInstance.get<User>(`/users/profile/${username}`)
+//     return response.data
+// }
 
-    // searchProfiles: async (query: string, filters?: Record<string, any>): Promise<User[]> => {
-    //     const response = await axiosInstance.get<User[]>('/user/profiles/search', {
-    //         params: {
-    //             query,
-    //             ...filters
-    //         }
-    //     })
-    //     return response.data
-    // }
+// searchProfiles: async (query: string, filters?: Record<string, any>): Promise<User[]> => {
+//     const response = await axiosInstance.get<User[]>('/user/profiles/search', {
+//         params: {
+//             query,
+//             ...filters
+//         }
+//     })
+//     return response.data
+// }
