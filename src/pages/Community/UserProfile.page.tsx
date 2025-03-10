@@ -60,10 +60,10 @@ const UserProfilePage = () => {
         .toUpperCase()
 
     // Avatar source
-    const avatarSrc = user.avatarURL
-        ? `${import.meta.env.VITE_API_URL}avatars${user.avatarURL}`
-        : user.image
-
+    const avatarSrc =  `${import.meta.env.VITE_API_URL}/avatars/${user.avatar}`
+    
+    console.log(avatarSrc)
+        
     return (
         <div className="container mx-auto p-6">
             <Button variant="ghost" onClick={handleBack} className="mb-6">
