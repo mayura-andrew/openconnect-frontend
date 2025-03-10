@@ -1,7 +1,5 @@
 import React, { useState, useMemo } from 'react'
 import { useProfilesWithIdeas } from '@/hooks/useProfilesWithIdeas'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { AlertCircle } from 'lucide-react'
 import { LoadingScreen } from '@/components/common/LoadingScreen'
 import { GridLayout } from '@/components/layout/GridLayout.component'
 import { Input } from '@/components/ui/input'
@@ -14,6 +12,7 @@ import {
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import { ErrorState, NoProfilesFound, NoResultsFound } from '@/components/common/EmptyState.component'
 
 const Community: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('')
@@ -23,7 +22,19 @@ const Community: React.FC = () => {
     const limit = 20
     const offset = (currentPage - 1) * limit
 
-    const { data, isLoading, error } = useProfilesWithIdeas(limit, offset)
+    const { 
+        data, 
+        isLoading, 
+        error, 
+        refetch 
+    } = useProfilesWithIdeas(limit, offset)
+
+    // Reset filters and search
+    const resetFilters = () => {
+        setSearchQuery('');
+        setFacultyFilter('all');
+        setSortBy('name');
+    };
 
     // Handle search, filtering, and sorting
     const filteredProfiles = useMemo(() => {
@@ -33,8 +44,8 @@ const Community: React.FC = () => {
             // Search by name, title, skills, or bio
             const searchLower = searchQuery.toLowerCase();
             
-            const matchesSearch = 
-                user.firstname?.toLowerCase().includes(searchLower) || 
+            const matchesSearch = !searchQuery || 
+                (user.name || '').toLowerCase().includes(searchLower) || 
                 (user.title || '').toLowerCase().includes(searchLower) ||
                 (user.bio || '').toLowerCase().includes(searchLower) ||
                 user.skills?.some(skill => skill.toLowerCase().includes(searchLower));
@@ -49,7 +60,7 @@ const Community: React.FC = () => {
             // Sort by selected criteria
             switch (sortBy) {
                 case 'name':
-                    return a.name.localeCompare(b.name);
+                    return (a.name || '').localeCompare(b.name || '');
                 default:
                     return 0;
             }
@@ -77,17 +88,20 @@ const Community: React.FC = () => {
         )
     }
 
-    // If error, show error message
+    // If error, show error state
     if (error) {
         return (
-            <div className="container mx-auto p-6">
-                <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>
-                        Failed to load profiles. Please try again later.
-                    </AlertDescription>
-                </Alert>
+            <div className="container mx-auto p-6 flex flex-col items-center justify-center min-h-[70vh]">
+                <ErrorState onRetry={() => refetch()} />
+            </div>
+        )
+    }
+
+    // If no data at all
+    if (!data || !data.profiles || data.profiles.length === 0) {
+        return (
+            <div className="container mx-auto p-6 flex flex-col items-center justify-center min-h-[70vh]">
+                <NoProfilesFound onRefresh={() => refetch()} />
             </div>
         )
     }
@@ -152,12 +166,12 @@ const Community: React.FC = () => {
                     Showing {filteredProfiles.length} of {data?.count || 0} members
                 </div>
                 
-                {/* Profile cards grid */}
-                <GridLayout users={filteredProfiles} />
-                
-                {filteredProfiles.length === 0 && (
-                    <div className="text-center py-10">
-                        <p className="text-gray-500">No results found</p>
+                {/* Profile cards grid or empty state */}
+                {filteredProfiles.length > 0 ? (
+                    <GridLayout users={filteredProfiles} />
+                ) : (
+                    <div className="py-12">
+                        <NoResultsFound onReset={resetFilters} />
                     </div>
                 )}
                 

@@ -7,8 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Github, Linkedin, Facebook, ArrowLeft, Mail, Phone, MapPin, Briefcase, BookOpen, School } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import { ErrorState } from '@/components/common/EmptyState.component';
 
 const UserProfilePage = () => {
     const { userId } = useParams<{ userId: string }>();
@@ -17,10 +16,10 @@ const UserProfilePage = () => {
     const { 
         data: user, 
         isLoading, 
-        isError, 
-        error 
+        isError,
+        refetch 
     } = useUserProfileDetails(userId);
-    
+
     const handleBack = () => {
         navigate(-1);
     };
@@ -29,17 +28,12 @@ const UserProfilePage = () => {
         return <LoadingScreen message="Loading profile..." />;
     }
     
+ 
     if (isError || !user) {
         return (
-            <div className="container mx-auto p-6">
-                <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>
-                        Failed to load this user's profile. The user might not exist or there was a problem with the connection.
-                    </AlertDescription>
-                </Alert>
-                <Button onClick={handleBack} className="mt-4">
+            <div className="container mx-auto p-6 flex flex-col items-center justify-center min-h-[70vh]">
+                <ErrorState onRetry={() => refetch()} />
+                <Button variant="ghost" onClick={handleBack} className="mt-4">
                     <ArrowLeft className="mr-2 h-4 w-4" /> Go Back
                 </Button>
             </div>
