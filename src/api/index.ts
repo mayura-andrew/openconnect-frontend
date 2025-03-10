@@ -1,4 +1,4 @@
-import { axiosInstance } from '../lib/axios'
+import { axiosInstance } from '@/lib/axios'
 import {
     SignUpRequest,
     SignUpResponse,
@@ -12,6 +12,9 @@ import {
     User,
     ProfileResponse,
     ProfileWithIdeasResponse,
+    UserProfileWithIdeas,
+    Idea,
+    UserProfileDetailResponse,
 } from '../types'
 
 export const authApi = {
@@ -205,7 +208,10 @@ export const profileApi = {
         return response.data.profile
     },
 
-    getProfilesWithIdeas: async (limit: number, offset: number = 0): Promise<ProfileWithIdeasResponse> => {
+    getProfilesWithIdeas: async (
+        limit: number,
+        offset: number = 0
+    ): Promise<ProfileWithIdeasResponse> => {
         const response = await axiosInstance.get<ProfileWithIdeasResponse>(
             '/profiles-with-ideas',
             {
@@ -213,32 +219,82 @@ export const profileApi = {
             }
         )
         return response.data
-    }
+    },
 
-    // uploadProfileImage: async (file: File): Promise<{url: string}> => {
-    //     const formData = new FormData()
-    //     formData.append('avatar', file)
-    //     const response = await axiosInstance.post('/user/profile/avatar', formData)
-    //     return response.data
-    // },
+    getUserProfileById: async (
+        userId: string
+    ): Promise<UserProfileWithIdeas> => {
+        try {
+            const response = await axiosInstance.get<UserProfileDetailResponse>(
+                `/profiles/id/${userId}`
+            )
 
-    // updateSkills: async (skills: strings[]): Promise<User> => {
-    //     const response = await axiosInstance.put('/user/profile/skills', {skills})
-    //     return response.data
-    // },
+            // Access the correct nested structure
+            const profileData = response.data.response
+            const profile = profileData.profile
+            const ideas = profileData.ideas || []
 
-    // getProfileByUsername: async (username: string): Promise<User> => {
-    //     const response = await axiosInstance.get<User>(`/users/profile/${username}`)
-    //     return response.data
-    // }
+            // Create a complete user profile with ideas
+            const userProfile: UserProfileWithIdeas = {
+                id: profile.id,
+                name: `${profile.firstname || ''} ${profile.lastname || ''}`.trim(),
+                firstname: profile.firstname,
+                lastname: profile.lastname,
+                username: profile.username,
+                email: profile.email,
+                title: profile.title || '',
+                faculty: profile.faculty || '',
+                program: profile.program || '',
+                bio: profile.bio,
+                image: profile.avatar_url || profileData.avatarURL || '',
+                avatarURL: profile.avatar_url || profileData.avatarURL,
+                avatar: profile.avatar,
+                skills: profile.skills || [],
+                ideas: ideas,
+                ideas_count: profileData.ideas_count,
+                linkedin: profile.linkedin,
+                github: profile.github,
+                fb: profile.fb,
+                uni: profile.uni,
+                year: profile.year,
+                degree: profile.degree,
+                mobile: profile.mobile,
+                created_at: profile.created_at,
+                updated_at: profile.updated_at,
+                has_completed_profile: profile.has_completed_profile,
+                user_type: profile.user_type,
+            }
 
-    // searchProfiles: async (query: string, filters?: Record<string, any>): Promise<User[]> => {
-    //     const response = await axiosInstance.get<User[]>('/user/profiles/search', {
-    //         params: {
-    //             query,
-    //             ...filters
-    //         }
-    //     })
-    //     return response.data
-    // }
+            return userProfile
+        } catch (error) {
+            console.error('Error fetching user profile:', error)
+            throw error
+        }
+    },
 }
+// uploadProfileImage: async (file: File): Promise<{url: string}> => {
+//     const formData = new FormData()
+//     formData.append('avatar', file)
+//     const response = await axiosInstance.post('/user/profile/avatar', formData)
+//     return response.data
+// },
+
+// updateSkills: async (skills: strings[]): Promise<User> => {
+//     const response = await axiosInstance.put('/user/profile/skills', {skills})
+//     return response.data
+// },
+
+// getProfileByUsername: async (username: string): Promise<User> => {
+//     const response = await axiosInstance.get<User>(`/users/profile/${username}`)
+//     return response.data
+// }
+
+// searchProfiles: async (query: string, filters?: Record<string, any>): Promise<User[]> => {
+//     const response = await axiosInstance.get<User[]>('/user/profiles/search', {
+//         params: {
+//             query,
+//             ...filters
+//         }
+//     })
+//     return response.data
+// }

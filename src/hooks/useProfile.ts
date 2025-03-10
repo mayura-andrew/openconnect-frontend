@@ -24,7 +24,6 @@ export function useProfile() {
         onSuccess: (updatedProfile) => {
             queryClient.setQueryData(['profile', authUser?.id], updatedProfile)
             toast.success('Profile updated successfully')
-            
         },
 
         onError: (error: any) => {
