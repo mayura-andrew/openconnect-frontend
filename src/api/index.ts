@@ -1,4 +1,4 @@
-import { axiosInstance } from '../lib/axios'
+import { axiosInstance } from '@/lib/axios'
 import {
     SignUpRequest,
     SignUpResponse,
@@ -12,6 +12,8 @@ import {
     User,
     ProfileResponse,
     ProfileWithIdeasResponse,
+    UserProfileWithIdeas,
+    Idea,
 } from '../types'
 
 export const authApi = {
@@ -213,7 +215,52 @@ export const profileApi = {
             }
         )
         return response.data
-    }
+    },
+
+        
+     getUserProfileById: async (userId: string): Promise<UserProfileWithIdeas> => {
+            try {
+                const response = await axiosInstance.get<{
+                    profile: UserProfileWithIdeas;
+                    ideas: Idea[];
+                }>(`/profiles/${userId}`);
+                
+                // Transform the response to match your frontend types
+                const profile = response.data.profile;
+                const ideas = response.data.ideas || [];
+                
+                // Create a complete user profile with ideas
+                const userProfile: UserProfileWithIdeas = {
+                    id: profile.id,
+                    name: `${profile.firstname || ''} ${profile.lastname || ''}`.trim(),
+                    firstname: profile.firstname,
+                    lastname: profile.lastname,
+                    username: profile.username,
+                    email: profile.email,
+                    title: profile.title || '',
+                    faculty: profile.faculty || '',
+                    program: profile.program || '',
+                    bio: profile.bio,
+                    image: profile.avatarURL || '',
+                    avatarURL: profile.avatarURL,
+                    avatar: profile.avatar,
+                    skills: profile.skills || [],
+                    ideas: ideas,
+                    linkedin: profile.linkedin,
+                    github: profile.github,
+                    fb: profile.fb,
+                    uni: profile.uni,
+                    year: profile.year,
+                    mobile: profile.mobile
+                };
+                
+                return userProfile;
+            } catch (error) {
+                console.error("Error fetching user profile:", error);
+                throw error;
+            }
+        }
+    };
 
     // uploadProfileImage: async (file: File): Promise<{url: string}> => {
     //     const formData = new FormData()
@@ -241,4 +288,4 @@ export const profileApi = {
     //     })
     //     return response.data
     // }
-}
+

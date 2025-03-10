@@ -1,9 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useProfilesWithIdeas } from '@/hooks/useProfilesWithIdeas'
-import { ProfessionalNetworkGrid } from '@/components/ProfessionalNetworkGrid'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
 import { LoadingScreen } from '@/components/common/LoadingScreen'
+import { GridLayout } from '@/components/layout/GridLayout.component'
+import { Input } from '@/components/ui/input'
+import { 
+    Select, 
+    SelectContent, 
+    SelectItem, 
+    SelectTrigger, 
+    SelectValue 
+} from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
 
 const Community: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('')
@@ -15,31 +25,48 @@ const Community: React.FC = () => {
 
     const { data, isLoading, error } = useProfilesWithIdeas(limit, offset)
 
-    console.log(data)
-
-    const handleSearchChange = (value: string) => {
-        setSearchQuery(value)
-    }
-
-    const handleFacultyChange = (value: string) => {
-        setFacultyFilter(value)
-        setCurrentPage(1) // Reset to first page when filter changes
-    }
-
-    const handleSortChange = (value: string) => {
-        setSortBy(value)
-    }
-
-    const sortedAndFilteredUsers = data?.profiles
-        .filter(user => {
-            const fullName = `${user.firstname} ${user.lastname}`.toLowerCase()
-            return fullName.includes(searchQuery.toLowerCase())
-        })
-        .filter(user => {
-            if (facultyFilter === 'all') return true
-            return user.faculty === facultyFilter
-        })
+    // Handle search, filtering, and sorting
+    const filteredProfiles = useMemo(() => {
+        if (!data?.profiles) return [];
         
+        return data.profiles.filter(user => {
+            // Search by name, title, skills, or bio
+            const searchLower = searchQuery.toLowerCase();
+            
+            const matchesSearch = 
+                user.firstname?.toLowerCase().includes(searchLower) || 
+                (user.title || '').toLowerCase().includes(searchLower) ||
+                (user.bio || '').toLowerCase().includes(searchLower) ||
+                user.skills?.some(skill => skill.toLowerCase().includes(searchLower));
+            
+            // Filter by faculty
+            const matchesFaculty = 
+                facultyFilter === 'all' || 
+                (user.faculty || '').toLowerCase() === facultyFilter.toLowerCase();
+            
+            return matchesSearch && matchesFaculty;
+        }).sort((a, b) => {
+            // Sort by selected criteria
+            switch (sortBy) {
+                case 'name':
+                    return a.name.localeCompare(b.name);
+                default:
+                    return 0;
+            }
+        });
+    }, [data, searchQuery, facultyFilter, sortBy]);
+
+    // Extract unique faculties for filter dropdown
+    const faculties = useMemo(() => {
+        if (!data?.profiles) return [];
+        
+        const facultySet = new Set<string>();
+        data.profiles.forEach(user => {
+            if (user.faculty) facultySet.add(user.faculty);
+        });
+        
+        return Array.from(facultySet);
+    }, [data?.profiles]);
 
     // If loading, show spinner
     if (isLoading) {
@@ -65,80 +92,102 @@ const Community: React.FC = () => {
         )
     }
 
-    const users = data?.profiles || []
-    console.log("users", users)
-
-    const totalUsers = data?.count || 0
-
-    console.log("totalUsers", totalUsers)
-   
-
-
-
     return (
         <div className="container mx-auto p-6">
-            {/* <ProfessionalNetworkGrid
-                users={users}
-                searchQuery={searchQuery}
-                onSearchChange={handleSearchChange}
-                facultyFilter={facultyFilter}
-                sortBy={sortBy}
-                onFacultyChange={handleFacultyChange}
-                onSortChange={handleSortChange}
-                filteredUsers={sortedAndFilteredUsers}
-                totalCount={totalUsers}
-                currentPage={currentPage}
-                onPageChange={setCurrentPage}
-                limit={limit}
-            />         */}
-
-            <div >
-                <h1 className="text-2xl font-bold mb-4">Community</h1>
-                <p className="text-gray-500 mb-4">
-                    Connect with other users in the community.
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {users.map((user, index) => (
-                    <div key={user.id || `user-${index}`} className="p-4 border rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                        <h3 className="font-semibold">{user.firstname} {user.lastname}</h3>
-                        <p className="text-sm text-gray-500">{user.title}</p>
-                        {user.avatarURL && (
-                            <div className="my-2">
-                                <img 
-                                    src={`${import.meta.env.VITE_API_URL}${user.avatarURL}`} 
-                                    alt={`${user.firstname}'s avatar`}
-                                    className="rounded-full w-16 h-16 object-cover"
-                                />
-                            </div>
-                              )}
-                              {user.bio && <p className="text-sm mt-2">{user.bio}</p>}
-                              {user.faculty && <p className="text-xs text-gray-600 mt-1">{user.faculty}</p>}
-                              {user.program && <p className="text-xs text-gray-600">{user.program}</p>}
-                              {user.skills && user.skills.length > 0 && (
-                                  <div className="mt-2">
-                                      <p className="text-xs font-medium">Skills:</p>
-                                      <div className="flex flex-wrap gap-1 mt-1">
-                                          {user.skills.map(skill => (
-                                              <span key={skill} className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
-                                                  {skill}
-                                              </span>
-                                          ))}
-                                     </div>
-                            </div>
-                        )}
-                    </div>
-                ))}
-                    {users.length === 0 && (
-                        <div className="text-center py-10">
-                            <p className="text-gray-500">No results found</p>
-                        </div>
-                    )}
+            <div className="flex flex-col space-y-6">
+                <div>
+                    <h1 className="text-2xl font-bold">Community</h1>
+                    <p className="text-gray-500 mt-1 mb-6">
+                        Connect with other professionals in your network
+                    </p>
                 </div>
+                
+                {/* Search and filter section */}
+                <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+                    <div className="w-full md:w-1/3">
+                        <Input
+                            placeholder="Search by name, title or skills..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full"
+                        />
+                    </div>
+                    
+                    <div className="flex gap-3 w-full md:w-auto">
+                        <Select 
+                            value={facultyFilter} 
+                            onValueChange={setFacultyFilter}
+                        >
+                            <SelectTrigger className="w-full md:w-[180px]">
+                                <SelectValue placeholder="Filter by Faculty" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Faculties</SelectItem>
+                                {faculties.map(faculty => (
+                                    <SelectItem key={faculty} value={faculty}>
+                                        {faculty}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        
+                        <Select 
+                            value={sortBy} 
+                            onValueChange={setSortBy}
+                        >
+                            <SelectTrigger className="w-full md:w-[150px]">
+                                <SelectValue placeholder="Sort By" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="name">Name (A-Z)</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+                
+                <Separator className="my-2" />
+                
+                {/* Results count */}
+                <div className="text-sm text-gray-500">
+                    Showing {filteredProfiles.length} of {data?.count || 0} members
+                </div>
+                
+                {/* Profile cards grid */}
+                <GridLayout users={filteredProfiles} />
+                
+                {filteredProfiles.length === 0 && (
+                    <div className="text-center py-10">
+                        <p className="text-gray-500">No results found</p>
+                    </div>
+                )}
+                
+                {/* Pagination */}
+                {data?.count && data.count > limit && (
+                    <div className="flex justify-center mt-8">
+                        <div className="flex gap-2">
+                            <Button 
+                                variant="outline" 
+                                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                disabled={currentPage === 1}
+                            >
+                                Previous
+                            </Button>
+                            <Button variant="outline">
+                                {currentPage}
+                            </Button>
+                            <Button 
+                                variant="outline"
+                                onClick={() => setCurrentPage(p => p + 1)}
+                                disabled={currentPage * limit >= data.count}
+                            >
+                                Next
+                            </Button>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
-                                
     )
 }
-
 
 export default Community

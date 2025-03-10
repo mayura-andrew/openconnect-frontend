@@ -1,10 +1,65 @@
+// Update UserProfile to match what ProfileCard expects
 export interface UserProfile {
     id: string
-    name: string
-    title: string
-    faculty: string
-    program: string
-    image: string
+    name?: string
+    title?: string
+    faculty?: string
+    program?: string
+    image?: string
+    firstname?: string
+    lastname?: string
+    bio?: string
+    uni?: string
+    year?: string
+    avatar?: string
+    avatarURL?: string
+    skills: string[]
+    linkedin?: string
+    github?: string
+    fb?: string
+    mobile?: string
+    email?: string
+    ideas?: Idea[]
+    username?: string
+}
+
+// The backend API response structure
+export interface ProfileWithIdeasResponse {
+  profiles: {
+    profile: {
+      id: string
+      username?: string
+      email?: string
+      user_type?: string
+      firstname?: string
+      lastname?: string
+      year?: string
+      avatar?: string
+      avatar_url?: string
+      title?: string
+      bio?: string
+      faculty?: string
+      program?: string
+      degree?: string
+      uni?: string
+      mobile?: string
+      linkedin?: string
+      github?: string
+      fb?: string
+      skills: string[]
+      has_completed_profile?: boolean
+      created_at?: string
+      updated_at?: string
+    };
+    ideas: Idea[];
+  }[];
+  count: number;
+}
+
+// What we transform the API response into for our components
+export interface TransformedProfilesResponse {
+  profiles: UserProfile[];
+  count: number;
 }
 
 export interface User {
@@ -282,9 +337,4 @@ export interface UserProfileWithIdeas extends UserProfile {
     linkedin?: string
     github?: string
     fb?: string
-}
-
-export interface ProfileWithIdeasResponse {
-    profiles: UserProfileWithIdeas[]
-    count: number
 }

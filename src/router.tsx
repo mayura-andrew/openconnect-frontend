@@ -19,6 +19,7 @@ import { Feed } from './pages/Feed/index'
 import ResetPassword from './pages/Auth/ResetPassword'
 import Activation from './pages/Auth/Activation'
 import GoogleCallback from './pages/Auth/GoogleCallback'
+import UserProfilePage from './components/common/UserProfile'
 
 export const Router = () => {
     return (
@@ -27,6 +28,7 @@ export const Router = () => {
             <Route element={<PublicLayout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/community" element={<Community />} />
+                <Route path="/profile/:userId" element={<UserProfilePage />} />
                 <Route path="/auth/login" element={<SignIn />} />
                 <Route path="/auth/signup" element={<SignUp />} />
                 <Route
