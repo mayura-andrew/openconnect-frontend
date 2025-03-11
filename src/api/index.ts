@@ -57,52 +57,109 @@ export const authApi = {
         return response.data
     },
 
-    signIn: async (credentials: SignInCredentials): Promise<SignInResponse> => {
-        const response = await axiosInstance.post<SignInResponse>(
-            '/auth/tokens/authentication',
-            credentials
-        )
-
-        // After getting the token, immediately fetch user data
-        if (response.data.authentication_token) {
-            // Store token first so the next request can use it
-            localStorage.setItem(
-                'token',
-                response.data.authentication_token.token
-            )
-            localStorage.setItem(
-                'token_expiry',
-                response.data.authentication_token.expiry
-            )
-
-            // Then fetch user profile
-            try {
-                const userResponse =
-                    await axiosInstance.get<ProfileResponse>('/profile')
-                // Return combined data that matches your interface
-                return {
-                    authentication_token: response.data.authentication_token,
-                    user: userResponse.data.profile,
+        signIn: async (credentials: SignInCredentials): Promise<SignInResponse> => {
+        try {
+            const response = await axiosInstance.post<{
+                authentication_token: {
+                    token: string;
+                    expiry: string;
+                };
+            }>('/auth/tokens/authentication', credentials);
+    
+            // Store the token immediately for subsequent requests
+            if (response.data.authentication_token) {
+                localStorage.setItem(
+                    'token',
+                    response.data.authentication_token.token
+                );
+                localStorage.setItem(
+                    'token_expiry',
+                    response.data.authentication_token.expiry
+                );
+    
+                // Now fetch the user profile with the new token
+                try {
+                    const userResponse = await profileApi.getCurrentProfile();
+                    console.log('userResponse', userResponse);
+                    
+                    // Extract the correct user profile from the nested response
+                    let profileData;
+                    
+                    // Check if the response has the nested profile structure
+                    if (userResponse.profile && typeof userResponse.profile === 'object') {
+                        profileData = userResponse.profile;
+                    } else if (userResponse.hasProfileCreated && userResponse.profile) {
+                        profileData = userResponse.profile;
+                    } else {
+                        profileData = userResponse;
+                    }
+                    
+                    // Return combined data with properly structured user data
+                    return {
+                        authentication_token: response.data.authentication_token,
+                        user: profileData
+                    };
+                } catch (profileError) {
+                    // If profile fetch fails, remove token and rethrow
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('token_expiry');
+                    console.error("Failed to fetch user profile after login:", profileError);
+                    throw new Error("Authentication succeeded but couldn't load user profile");
                 }
-            } catch (error) {
-                // If profile fetch fails, remove token and rethrow
-                localStorage.removeItem('token')
-                throw error
+            } else {
+                throw new Error("Authentication token not received from server");
             }
+        } catch (error: any) {
+            if (error.response?.data?.error) {
+                throw { message: error.response.data.error };
+            }
+            throw error;
         }
-
-        return response.data
     },
+googleSignIn: () => {
+    const backendUrl = import.meta.env.VITE_API_URL;
+    
+    // Clean up any existing tokens
+    localStorage.removeItem('token');
+    localStorage.removeItem('token_expiry');
+    sessionStorage.removeItem('googleAuthState');
 
-    googleSignIn: () => {
-        const backendUrl = import.meta.env.VITE_API_URL
-        localStorage.removeItem('token')
-        sessionStorage.removeItem('googleAuthState')
+    // Save the current path to return to after authentication
+    sessionStorage.setItem('googleAuthReturnTo', window.location.pathname);
 
-        sessionStorage.setItem('googleAuthReturnTo', window.location.pathname)
+    // Redirect to backend Google auth endpoint
+    window.location.href = `${backendUrl}/auth/google/login`;
+},
 
-        window.location.href = `${backendUrl}/auth/google/login`
-    },
+// Add this new method for handling the Google OAuth callback
+processGoogleCallback: async (token: string): Promise<User> => {
+    try {
+        // Store the token for subsequent requests
+        localStorage.setItem('token', token);
+        
+        // Use the token to fetch the user profile
+        const userResponse = await profileApi.getCurrentProfile();
+        console.log('Google Auth userResponse:', userResponse);
+        
+        // Extract the correct user profile from the nested response
+        let profileData;
+        
+        // Check if the response has the nested profile structure
+        if (userResponse.profile && typeof userResponse.profile === 'object') {
+            profileData = userResponse.profile;
+        } else if (userResponse.has_completed_profile && userResponse.profile) {
+            profileData = userResponse.profile;
+        } else {
+            profileData = userResponse;
+        }
+        
+        return profileData;
+    } catch (error) {
+        console.error("Failed to process Google authentication:", error);
+        localStorage.removeItem('token');
+        throw error;
+    }
+},
 
     requestPasswordReset: async (
         data: ForgotPasswordRequest
@@ -195,9 +252,21 @@ export const authApi = {
 }
 
 export const profileApi = {
-    getCurrentProfile: async (): Promise<User> => {
-        const response = await axiosInstance.get<ProfileResponse>('/profile')
-        return response.data.profile
+        getCurrentProfile: async (): Promise<User> => {
+        const response = await axiosInstance.get<ProfileResponse>('/profile');
+        
+        // Handle nested profile structure
+        if (response.data?.has_completed_profile && response.data?.profile) {
+            return response.data.profile;
+        }
+        
+        // Handle standard profile structure
+        if (response.data?.profile) {
+            return response.data.profile;
+        }
+        
+        // Fallback
+        return response.data as any;
     },
 
     updateProfile: async (data: Partial<User>): Promise<User> => {

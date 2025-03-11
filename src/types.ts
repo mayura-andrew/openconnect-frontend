@@ -1,29 +1,3 @@
-// Update UserProfile to match what ProfileCard expects
-export interface UserProfile {
-    id: string
-    name?: string
-    title?: string
-    faculty?: string
-    program?: string
-    image?: string
-    firstname?: string
-    lastname?: string
-    bio?: string
-    uni?: string
-    year?: string
-    avatar?: string
-    avatarURL?: string
-    skills: string[]
-    linkedin?: string
-    github?: string
-    fb?: string
-    mobile?: string
-    email?: string
-    ideas?: Idea[]
-    username?: string
-}
-
-// The backend API response structure
 export interface ProfileWithIdeasResponse {
     profiles: {
         profile: {
@@ -62,33 +36,17 @@ export interface TransformedProfilesResponse {
     count: number
 }
 
-export interface User {
-    id?: string
-    username?: string
-    firstname?: string
-    lastname?: string
-    email?: string
-    avatar?: File | string
-    avatarURL?: string
-    title?: string
-    bio?: string
-    faculty?: string
-    program?: string
-    degree?: string
-    year?: string
-    uni?: string
-    mobile?: string
-    linkedin?: string
-    github?: string
-    fb?: string
-    skills: string[]
-    has_completed_profile?: boolean
-    isAdmin?: boolean
-    createdAt: string
-    updatedAt: string
-}
+// export interface User {
+//     id: string
+//     username: string
+//     email: string
+//     user_type?: string
+//     profile?: UserProfile
+//     has_completed_profile?: boolean
+
 
 export interface ProfileResponse {
+    has_completed_profile?: boolean
     profile: User
     error?: string
 }
@@ -217,11 +175,6 @@ export interface UseActivationReturn {
 export interface SignInCredentials {
     email: string
     password: string
-}
-
-export interface AuthenticationToken {
-    token: string
-    expiry: string
 }
 
 export interface SignInResponse {
@@ -380,3 +333,60 @@ export interface UserProfileWithIdeas extends UserProfile {
     has_completed_profile?: boolean
     user_type?: string
 }
+
+
+export interface BaseUser {
+    id: string
+    username: string
+    email: string
+    user_type?: string
+    has_completed_profile?: boolean
+}
+
+export interface ProfileData {
+    firstname?: string;
+    lastname?: string;
+    title?: string;
+    faculty?: string;
+    program?: string;
+    bio?: string;
+    uni?: string;
+    year?: string;
+    degree?: string;
+    avatar?: string;
+    avatar_url?: string;
+    mobile?: string;
+    linkedin?: string;
+    github?: string;
+    fb?: string;
+    skills?: string[];
+    created_at?: string;
+    updated_at?: string;
+}
+  
+export interface User extends BaseUser, ProfileData {
+    profile?: ProfileData;
+}
+
+export interface UserProfile extends BaseUser, ProfileData {
+    name?: string;
+    image?: string;
+    avatarURL?: string;
+}
+export interface UserProfileWithIdeas extends UserProfile {
+    ideas: Idea[];
+    ideas_count?: number;
+} 
+
+export interface ProfileResponse {
+    profile: User;
+    hasProfileCreated?: boolean;
+    has_completed_profile?: boolean;
+    error?: string;
+  }
+  
+  // Authentication token structure
+export interface AuthenticationToken {
+    token: string;
+    expiry: string;
+  }

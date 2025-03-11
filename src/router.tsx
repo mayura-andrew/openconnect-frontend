@@ -20,53 +20,47 @@ import ResetPassword from './pages/Auth/ResetPassword'
 import Activation from './pages/Auth/Activation'
 import GoogleCallback from './pages/Auth/GoogleCallback'
 import UserProfilePage from './components/common/UserProfile'
+import { PublicHeaderLayout } from './components/layout/PublicHeaderLayout'
+
 
 export const Router = () => {
     return (
         <Routes>
-            {/* Public Routes */}
-            <Route element={<PublicLayout />}>
+            {/* Public Routes with Public Header */}
+            <Route element={<PublicHeaderLayout />}>
                 <Route path="/" element={<Home />} />
-                <Route path="/community" element={<Community />} />
-                <Route path="/profile/:userId" element={<UserProfilePage />} />
+                
+            </Route>
+
+            {/* Auth Routes */}
+            <Route element={<PublicLayout />}>
                 <Route path="/auth/login" element={<SignIn />} />
                 <Route path="/auth/signup" element={<SignUp />} />
-                <Route
-                    path="/auth/forgot-password"
-                    element={<ForgotPassword />}
-                />
-                <Route
-                    path="/auth/reset-password"
-                    element={<ResetPassword />}
-                />
-                <Route path="/auth/activate" element={<Activation />} />
-
-                <Route path="/auth/callback" element={<GoogleCallback />} />
-
-                {/* Other public routes */}
+                <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+                <Route path="/auth/reset-password" element={<ResetPassword />} />
+                <Route path="/auth/activation" element={<Activation />} />
+                <Route path="/auth/google/callback" element={<GoogleCallback />} />
             </Route>
 
-            {/* Protected Routes */}
+            {/* Protected Routes with Dynamic Header (based on auth state) */}
             <Route element={<AuthenticatedLayout />}>
-                {/* Onboarding Routes */}
-                <Route element={<OnboardingLayout />}>
-                    <Route path="/onboarding" element={<ProfileOnboarding />} />
-                </Route>
-
-                {/* Main App Routes (require completed onboarding) */}
                 <Route element={<MainLayout />}>
-                    <Route path="/feed" element={<Feed />} />
+                <Route path="/community" element={<Community />} />
+                <Route path="/profile/:userId" element={<UserProfilePage />} />
+                    <Route path="/profile/:userId" element={<UserProfilePage />} />
                     <Route path="/profile" element={<MyProfileLayout />} />
                     <Route path="/my-submissions" element={<MySubmissions />} />
-                    <Route
-                        path="/view-ideas"
-                        element={<ViewOtherUsersIdeas />}
-                    />
-                    {/* Other authenticated routes */}
+                    <Route path="/view-ideas" element={<ViewOtherUsersIdeas />} />
+                    <Route path="/feed" element={<Feed />} />
                 </Route>
             </Route>
 
-            {/* Catch all - redirect to home */}
+            {/* Onboarding Routes */}
+            <Route element={<OnboardingLayout />}>
+                <Route path="/onboarding" element={<ProfileOnboarding />} />
+            </Route>
+
+            {/* Catch All */}
             <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
     )

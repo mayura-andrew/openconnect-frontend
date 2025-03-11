@@ -1,12 +1,51 @@
-// MobileNavigation.component.tsx
-import { navigationItems } from '../navigation-config'
 import { Button } from '@/components/ui/button'
+import { CircleUserRound, Settings, LogOut, LibraryBig } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 interface MobileNavigationProps {
     onClose: () => void
+    onLogout: () => void
 }
 
-export const MobileNavigation: React.FC<MobileNavigationProps> = () => {
+export const MobileNavigation: React.FC<MobileNavigationProps> = ({ onClose, onLogout }) => {
+    const navigate = useNavigate()
+    
+    const navigationItems = [
+        {
+            label: 'My Submissions',
+            icon: LibraryBig,
+            onClick: () => {
+                navigate('/my-submissions')
+                onClose()
+            },
+        },
+        {
+            label: 'Profile',
+            icon: CircleUserRound,
+            onClick: () => {
+                navigate('/profile')
+                onClose()
+            },
+        },
+        {
+            label: 'Settings',
+            icon: Settings,
+            onClick: () => {
+                navigate('/settings')
+                onClose()
+            },
+        },
+        {
+            label: 'Logout',
+            icon: LogOut,
+            onClick: () => {
+                onLogout()
+                onClose()
+            },
+            className: 'text-red-600',
+        },
+    ]
+
     return (
         <div className="flex flex-col gap-2">
             {navigationItems.map((item) => (

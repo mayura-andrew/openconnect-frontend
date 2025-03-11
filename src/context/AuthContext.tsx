@@ -22,6 +22,7 @@ interface AuthContextType {
     signup: (email: string, password: string, username: string) => Promise<void>
     updateProfile: (data: Partial<User>) => Promise<User>
     hasCompletedOnboarding: boolean
+    handleGoogleAuth: (token: string) => Promise<User>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -115,23 +116,32 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const login = async (email: string, password: string) => {
-        setIsLoading(true)
-        try {
-            const response = await authApi.signIn({ email, password })
-            setUser(response.user)
-            setHasCompletedOnboarding(!!response.user.has_completed_profile)
-
-            // Token is already stored in localStorage by the API function
-            toast.success('Successfully signed in!')
-            return response.user
-        } catch (error: any) {
-            console.error('Login error:', error)
-            toast.error(error?.message || 'Login failed')
-            throw error
-        } finally {
-            setIsLoading(false)
-        }
-    }
+                setIsLoading(true);
+                try {
+                    const response = await authApi.signIn({ email, password });
+                    
+                    // Store the user profile
+                    setUser(response.user);
+                    
+                    // Check if the user has completed onboarding
+                    const hasCompleted = !!response.user.has_completed_profile;
+                    setHasCompletedOnboarding(hasCompleted);
+                    
+                    console.log('Login successful:', {
+                        user: response.user,
+                        hasCompletedProfile: hasCompleted
+                    });
+                    
+                    toast.success('Successfully signed in!');
+                    return response.user;
+                } catch (error: any) {
+                    console.error('Login error:', error);
+                    toast.error(error?.message || 'Login failed. Please check your credentials.');
+                    throw error;
+                } finally {
+                    setIsLoading(false);
+                }
+            };
 
     const signup = async (
         email: string,
@@ -156,6 +166,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return <LoadingScreen message="Setting up your experience..." />
     }
 
+        // Add this method to your AuthContext
+    const handleGoogleAuth = async (token: string) => {
+        setIsLoading(true);
+        try {
+            const userData = await authApi.processGoogleCallback(token);
+            
+            setUser(userData);
+            setHasCompletedOnboarding(!!userData.has_completed_profile);
+            
+            console.log('Google login successful:', {
+                user: userData,
+                hasCompletedProfile: !!userData.has_completed_profile
+            });
+            
+            toast.success('Successfully signed in with Google!');
+            return userData;
+        } catch (error: any) {
+            console.error('Google login error:', error);
+            toast.error(error?.message || 'Google login failed.');
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+
+
     return (
         <AuthContext.Provider
             value={{
@@ -167,6 +204,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 signup,
                 updateProfile,
                 hasCompletedOnboarding,
+                handleGoogleAuth
             }}
         >
             {children}

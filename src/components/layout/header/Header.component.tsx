@@ -4,6 +4,7 @@ import { NavButtons } from './NavButtons.component'
 import { UserProfile } from './UserProfile.component'
 import { MobileMenu } from './Mobile/MobileMenu.component'
 import { MobileMenuButton } from './Mobile/MobileMenuButton.component'
+import { User } from '@/types'
 
 interface HeaderProps {
     requests: Array<{
@@ -14,15 +15,24 @@ interface HeaderProps {
     }>
     isRequestPanelOpen: boolean
     setIsRequestPanelOpen: (isOpen: boolean) => void
+    user: User
+    onLogout: () => void
 }
 
-const Header: React.FC<HeaderProps> = ({ requests, setIsRequestPanelOpen }) => {
+const Header: React.FC<HeaderProps> = ({ 
+    requests, 
+    isRequestPanelOpen, 
+    setIsRequestPanelOpen,
+    user,
+    onLogout
+}) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-    const user = {
-        name: 'Pasindu Bandara',
-        email: 'pasindumadusanka526@gmail.com',
-        avatar: 'https://github.com/shadcn.png',
+    // Transform user for component needs
+    const transformedUser = {
+        name: `${user.firstname || ''} ${user.lastname || ''}`.trim() || user.username || 'User',
+        email: user.email || '',
+        avatar: user.avatar ? `${import.meta.env.VITE_API_URL}/avatars/${user.avatar}` : 'https://github.com/shadcn.png',
     }
 
     return (
@@ -36,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({ requests, setIsRequestPanelOpen }) => {
                     setIsRequestPanelOpen={setIsRequestPanelOpen}
                 />
 
-                <UserProfile user={user} />
+                <UserProfile user={transformedUser} onLogout={onLogout} />
             </div>
             <div className="ml-auto md:hidden">
                 <MobileMenuButton
@@ -48,7 +58,8 @@ const Header: React.FC<HeaderProps> = ({ requests, setIsRequestPanelOpen }) => {
             <MobileMenu
                 isOpen={isMobileMenuOpen}
                 onClose={() => setIsMobileMenuOpen(false)}
-                user={user}
+                user={transformedUser}
+                onLogout={onLogout}
             />
         </header>
     )

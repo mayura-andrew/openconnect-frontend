@@ -6,16 +6,16 @@ import toast from 'react-hot-toast';
 
 const GoogleCallback = () => {
   const [searchParams] = useSearchParams();
-  const { handleGoogleAuth } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const [isProcessing, setIsProcessing] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
   // Extract token from URL parameters
   const token = searchParams.get('token');
+  const returnPath = sessionStorage.getItem('googleAuthReturnTo') || '/';
 
   useEffect(() => {
-    const processGoogleAuth = async () => {
+    const handleGoogleCallback = async () => {
       try {
         if (!token) {
           setError('Authentication failed: No token received');
@@ -24,37 +24,39 @@ const GoogleCallback = () => {
           return;
         }
 
-        // Process the Google auth with our context handler
-        const user = await handleGoogleAuth(token);
+        // Store the token for future API requests
+        localStorage.setItem('token', token);
         
         // Remove return path from session storage
-        const returnPath = sessionStorage.getItem('googleAuthReturnTo') || '/';
         sessionStorage.removeItem('googleAuthReturnTo');
         
-        // Navigate based on profile completion status
-        if (user.has_completed_profile === false) {
-          console.log('Redirecting to onboarding...');
-          navigate('/onboarding');
+        // If user data is already loaded (via AuthContext's useEffect)
+        if (user) {
+          console.log('Google auth successful:', user);
+          console.log('Has completed profile:', !!user.has_completed_profile);
+          
+          // Navigate based on profile completion status
+          if (user.has_completed_profile === false) {
+            console.log('Redirecting to onboarding...');
+            navigate('/onboarding');
+          } else {
+            console.log('Redirecting to community...');
+            navigate('/community');
+          }
         } else {
-          console.log('Redirecting to community...');
-          navigate('/community');
+          // If user data isn't loaded yet, go to a safe default
+          navigate('/');
         }
       } catch (err: any) {
         console.error('Google auth error:', err);
         setError(err.message || 'Authentication failed');
         toast.error(err.message || 'Authentication failed');
         navigate('/auth/login');
-      } finally {
-        setIsProcessing(false);
       }
     };
 
-    processGoogleAuth();
-  }, [token, handleGoogleAuth, navigate]);
-
-  if (isProcessing) {
-    return <LoadingScreen message="Completing Google authentication..." />;
-  }
+    handleGoogleCallback();
+  }, [token, user, navigate]);
 
   if (error) {
     return (
@@ -71,7 +73,7 @@ const GoogleCallback = () => {
     );
   }
 
-  return null;
+  return <LoadingScreen message="Completing authentication..." />;
 };
 
 export default GoogleCallback;
