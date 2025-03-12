@@ -1,25 +1,25 @@
 import './index.css'
 import { BrowserRouter } from 'react-router-dom'
+import { QueryProvider } from './context/QueryProvider'
+import { LoadingProvider } from './context/LoadingContext'
+import { Toaster } from './components/common/Toaster.component'
+import { AuthProvider } from './context/AuthContext'
 import { Router } from './router'
 import { AppProvider } from './context/AppContext'
-import { Toaster } from './components/common/Toaster.component'
-import { QueryProvider } from './context/QueryProvider'
-import { AuthProvider } from './context/AuthContext'
-import { LoadingProvider } from './context/LoadingContext'
 
 export function App() {
-    return (
-        <QueryProvider>
-            <LoadingProvider>
-                <BrowserRouter>
-                    <AuthProvider>
-                        <AppProvider>
-                            <Router />
-                            <Toaster />
-                        </AppProvider>
-                    </AuthProvider>
-                </BrowserRouter>
-            </LoadingProvider>
-        </QueryProvider>
-    )
+  return (
+    <LoadingProvider>
+      <QueryProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <AppProvider>
+              <Router />
+              <Toaster />
+            </AppProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </QueryProvider>
+    </LoadingProvider>
+  )
 }

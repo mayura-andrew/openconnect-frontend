@@ -1,188 +1,102 @@
 // src/context/AppContext.tsx
 import { createContext, useContext, useState, ReactNode } from 'react'
-import { UserProfile } from '@/types'
+import { User } from '@/types'
 
 interface AppContextType {
-    requests: Array<{
-        id: number
-        name: string
-        title: string
-        image: string
-    }>
-    users: UserProfile[]
-    isRequestPanelOpen: boolean
-    setIsRequestPanelOpen: (isOpen: boolean) => void
+  requests: Array<{
+    id: number
+    name: string
+    title: string
+    image: string
+  }>
+  users: User[]
+  isRequestPanelOpen: boolean
+  setIsRequestPanelOpen: (isOpen: boolean) => void
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-    const [isRequestPanelOpen, setIsRequestPanelOpen] = useState(false)
+  const [isRequestPanelOpen, setIsRequestPanelOpen] = useState(false)
 
-    const requests = [
-        {
-            id: 1,
-            name: 'John Doe',
-            title: 'Software Engineer',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 2,
-            name: 'Jane Smith',
-            title: 'Product Manager',
-            image: 'https://github.com/shadcn.png',
-        },
-    ]
+  const requests = [
+    {
+      id: 1,
+      name: 'John Doe',
+      title: 'Software Engineer',
+      image: 'https://github.com/shadcn.png',
+    },
+    {
+      id: 2,
+      name: 'Jane Smith',
+      title: 'Product Manager',
+      image: 'https://github.com/shadcn.png',
+    },
+  ]
 
-    const users: UserProfile[] = [
-        {
-            id: 1,
-            name: 'John Doe',
-            title: 'Software Engineer',
-            faculty: 'Faculty of Computer Engineering',
-            program: 'Computer Engineering',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 2,
-            name: 'Jane Smith',
-            title: 'Product Manager',
-            faculty: 'Faculty of Business',
-            program: 'Business Management',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 3,
-            name: 'Mayura Andrew',
-            title: 'Software Engineer',
-            faculty: 'Faculty of Engineering Technology',
-            program: 'Bachelor of Software Engineering',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 4,
-            name: 'Mayura Andrew',
-            title: 'Software Engineer',
-            faculty: 'Faculty of Engineering Technology',
-            program: 'Bachelor of Software Engineering',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 5,
-            name: 'John Doe',
-            title: 'Software Engineer',
-            faculty: 'Faculty of Computer Engineering',
-            program: 'Computer Engineering',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 6,
-            name: 'Jane Smith',
-            title: 'Product Manager',
-            faculty: 'Faculty of Business',
-            program: 'Business Management',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 7,
-            name: 'Mayura Andrew',
-            title: 'Software Engineer',
-            faculty: 'Faculty of Engineering Technology',
-            program: 'Bachelor of Software Engineering',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 8,
-            name: 'Mayura Andrew',
-            title: 'Software Engineer',
-            faculty: 'Faculty of Engineering Technology',
-            program: 'Bachelor of Software Engineering',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 1,
-            name: 'John Doe',
-            title: 'Software Engineer',
-            faculty: 'Faculty of Computer Engineering',
-            program: 'Computer Engineering',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 2,
-            name: 'Jane Smith',
-            title: 'Product Manager',
-            faculty: 'Faculty of Business',
-            program: 'Business Management',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 3,
-            name: 'Mayura Andrew',
-            title: 'Software Engineer',
-            faculty: 'Faculty of Engineering Technology',
-            program: 'Bachelor of Software Engineering',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 4,
-            name: 'Mayura Andrew',
-            title: 'Software Engineer',
-            faculty: 'Faculty of Engineering Technology',
-            program: 'Bachelor of Software Engineering',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 5,
-            name: 'John Doe',
-            title: 'Software Engineer',
-            faculty: 'Faculty of Computer Engineering',
-            program: 'Computer Engineering',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 6,
-            name: 'Jane Smith',
-            title: 'Product Manager',
-            faculty: 'Faculty of Business',
-            program: 'Business Management',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 7,
-            name: 'Mayura Andrew',
-            title: 'Software Engineer',
-            faculty: 'Faculty of Engineering Technology',
-            program: 'Bachelor of Software Engineering',
-            image: 'https://github.com/shadcn.png',
-        },
-        {
-            id: 8,
-            name: 'Mayura Andrew',
-            title: 'Software Engineer',
-            faculty: 'Faculty of Engineering Technology',
-            program: 'Bachelor of Software Engineering',
-            image: 'https://github.com/shadcn.png',
-        },
-    ]
+  const users: User[] = [
+    {
+      id: '1',
+      username: 'John Doe',
+      title: 'Software Engineer',
+      faculty: 'Faculty of Computer Engineering',
+      program: 'Computer Engineering',
+      avatar: 'https://github.com/shadcn.png',
+      created_at: '',
+      email: '',
+      user_type: '',
+      activated: false,
+      has_completed_profile: false,
+      version: 0,
+    },
+    {
+      id: '1',
+      username: 'John Doe',
+      title: 'Software Engineer',
+      faculty: 'Faculty of Computer Engineering',
+      program: 'Computer Engineering',
+      avatar: 'https://github.com/shadcn.png',
+      created_at: '',
+      email: '',
+      user_type: '',
+      activated: false,
+      has_completed_profile: false,
+      version: 0,
+    },
+    {
+      id: '1',
+      username: 'John Doe',
+      title: 'Software Engineer',
+      faculty: 'Faculty of Computer Engineering',
+      program: 'Computer Engineering',
+      avatar: 'https://github.com/shadcn.png',
+      created_at: '',
+      email: '',
+      user_type: '',
+      activated: false,
+      has_completed_profile: false,
+      version: 0,
+    },
+  ]
 
-    return (
-        <AppContext.Provider
-            value={{
-                requests,
-                users,
-                isRequestPanelOpen,
-                setIsRequestPanelOpen,
-            }}
-        >
-            {children}
-        </AppContext.Provider>
-    )
+  return (
+    <AppContext.Provider
+      value={{
+        requests,
+        users,
+        isRequestPanelOpen,
+        setIsRequestPanelOpen,
+      }}
+    >
+      {children}
+    </AppContext.Provider>
+  )
 }
 
 export const useApp = () => {
-    const context = useContext(AppContext)
-    if (context === undefined) {
-        throw new Error('useApp must be used within an AppProvider')
-    }
-    return context
+  const context = useContext(AppContext)
+  if (context === undefined) {
+    throw new Error('useApp must be used within an AppProvider')
+  }
+  return context
 }
