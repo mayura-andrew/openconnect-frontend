@@ -1,13 +1,28 @@
-// src/App.tsx
+import { Button } from './components/ui/button'
 import './index.css'
-import { RouterProvider } from 'react-router-dom'
-import { router } from './router'
-import { AppProvider } from './context/AppContext'
+import Home from './pages/home'
 
-export function App() {
+
+
+
+
+
+
+
+
+
+
+
+function App() {
+
   return (
-    <AppProvider>
-      <RouterProvider router={router} />
-    </AppProvider>
+    <>
+      <div>
+        <Button> Click me </Button>
+      </div>
+      <Home />
+    </>
   )
 }
+
+export default App
