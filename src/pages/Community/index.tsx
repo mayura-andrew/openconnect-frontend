@@ -117,56 +117,65 @@ const Community: React.FC = () => {
     return (
         <div className="container mx-auto p-6">
             <div className="flex flex-col space-y-6">
-                <div>
-                    <h1 className="text-2xl font-bold">Community</h1>
-                    <p className="text-gray-500 mt-1 mb-6">
-                        Connect with other professionals in your network
-                    </p>
-                </div>
-
-                {/* Search and filter section */}
-                <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
-                    <div className="w-full md:w-1/3">
-                        <Input
-                            placeholder="Search by name, title or skills..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full"
-                        />
+                <>
+                    <div>
+                        <h1 className="text-2xl font-bold">Community</h1>
+                        <p className="text-gray-500 mt-1 mb-6">
+                            Connect with other professionals in your network
+                        </p>
                     </div>
 
-                    <div className="flex gap-3 w-full md:w-auto">
-                        <Select
-                            value={facultyFilter}
-                            onValueChange={setFacultyFilter}
-                        >
-                            <SelectTrigger className="w-full md:w-[180px]">
-                                <SelectValue placeholder="Filter by Faculty" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">
-                                    All Faculties
-                                </SelectItem>
-                                {faculties.map((faculty) => (
-                                    <SelectItem key={faculty} value={faculty}>
-                                        {faculty}
+                    {/* Search and filter section */}
+                    <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+                        <div className="w-full md:w-1/3">
+                            <Input
+                                placeholder="Search by name, title or skills..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full"
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full md:w-auto">
+                            <Select
+                                value={facultyFilter}
+                                onValueChange={setFacultyFilter}
+                            >
+                                <SelectTrigger className="w-full md:w-44">
+                                    <div className="truncate overflow-hidden text-ellipsis whitespace-nowrap">
+                                        <SelectValue placeholder="Filter by Faculty" />
+                                    </div>
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">
+                                        All Faculties
                                     </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                                    {faculties.map((faculty) => (
+                                        <SelectItem
+                                            key={faculty}
+                                            value={faculty}
+                                        >
+                                            {faculty}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
 
-                        <Select value={sortBy} onValueChange={setSortBy}>
-                            <SelectTrigger className="w-full md:w-[150px]">
-                                <SelectValue placeholder="Sort By" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="name">Name (A-Z)</SelectItem>
-                            </SelectContent>
-                        </Select>
+                            <Select value={sortBy} onValueChange={setSortBy}>
+                                <SelectTrigger className="w-full md:w-[150px]">
+                                    <SelectValue placeholder="Sort By" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="name">
+                                        Name (A-Z)
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
                     </div>
-                </div>
 
-                <Separator className="my-2" />
+                    <Separator className="my-2" />
+                </>
 
                 {/* Results count */}
                 <div className="text-sm text-gray-500">

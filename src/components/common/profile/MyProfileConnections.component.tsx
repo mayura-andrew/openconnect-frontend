@@ -11,8 +11,8 @@ export function MyProfileConnections() {
                 <Separator />
             </CardHeader>
             <CardContent className="space-y-4">
-                <p className="text-sm text-muted-foreground italic">
-                    Comming soon...
+                <p className="text-xs text-muted-foreground italic">
+                    Coming soon...
                 </p>
                 {/* {[
                     {

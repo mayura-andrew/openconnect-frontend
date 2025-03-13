@@ -413,32 +413,33 @@ const MyProfileView = () => {
 
                         {/* Skills Section */}
                         <SkillsSection skills={profile.skills || []} />
-
-                        {/* About Me Section */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="text-base font-bold flex justify-between items-center">
-                                    About Me
-                                    <Button
-                                        variant="link"
-                                        className="text-black hover:text-blue-700 p-0"
-                                        onClick={() => setBioEditOpen(true)}
-                                    >
-                                        <Edit className="h-4 w-4" />
-                                    </Button>
-                                </CardTitle>
-                                <Separator />
-                            </CardHeader>
-                            <CardContent className="text-sm text-muted-foreground">
-                                {profile.bio ||
-                                    "You haven't added a bio yet. Click edit to tell others about yourself."}
-                            </CardContent>
-                        </Card>
                     </div>
 
                     {/* Right Panel */}
                     <div className="lg:col-span-2 space-y-6">
-                        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {/* About Me Section */}
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="text-base font-bold flex justify-between items-center">
+                                        About Me
+                                        <Button
+                                            variant="link"
+                                            className="text-black hover:text-blue-700 p-0"
+                                            onClick={() => setBioEditOpen(true)}
+                                        >
+                                            <Edit className="h-4 w-4" />
+                                        </Button>
+                                    </CardTitle>
+                                    <Separator />
+                                </CardHeader>
+                                <CardContent className="text-sm text-muted-foreground">
+                                    {profile.bio ||
+                                        "You haven't added a bio yet. Click edit to tell others about yourself."}
+                                </CardContent>
+                            </Card>
+
+                            {/* Connections Section */}
                             <MyProfileConnections />
                         </div>
 
