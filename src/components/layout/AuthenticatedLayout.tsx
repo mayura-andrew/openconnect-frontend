@@ -3,15 +3,15 @@ import { useAuth } from '@/context/AuthContext'
 import { LoadingScreen } from '../common/LoadingScreen.component'
 
 export const AuthenticatedLayout = () => {
-  const { isAuthenticated, isLoading } = useAuth()
+    const { isAuthenticated, isLoading } = useAuth()
 
-  if (isLoading) {
-    return <LoadingScreen message="Loading..." />
-  }
+    if (isLoading) {
+        return <LoadingScreen message="Loading..." />
+    }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/auth/login" replace />
-  }
+    if (!isAuthenticated) {
+        return <Navigate to="/auth/login" replace />
+    }
 
-  return <Outlet />
+    return <Outlet />
 }

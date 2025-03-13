@@ -52,8 +52,13 @@ import { Label } from '@/components/ui/label'
 export default function MySubmissions() {
     // Auth and user data
     const { user: authUser } = useAuth()
-    const { data: userData, isLoading, isError, refetch } = useGetUserProfileDetailsByID(authUser?.id)
-    
+    const {
+        data: userData,
+        isLoading,
+        isError,
+        refetch,
+    } = useGetUserProfileDetailsByID(authUser?.id)
+
     // Local state
     const [search, setSearch] = useState('')
     const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
@@ -76,8 +81,8 @@ export default function MySubmissions() {
 
     // Filter effect
     useEffect(() => {
-        if (!userData?.ideas) return;
-        
+        if (!userData?.ideas) return
+
         let filtered = userData.ideas
 
         // Filter ideas by search term
@@ -104,7 +109,7 @@ export default function MySubmissions() {
     const handleStatusSelect = (status: string) => {
         setSelectedStatus(status)
     }
-    
+
     const handleRemoveFilter = () => {
         setSelectedStatus(null)
         if (userData?.ideas) {
@@ -122,17 +127,23 @@ export default function MySubmissions() {
     }
 
     const handleEdit = () => {
-        toast.success("Edit functionality coming soon!", { icon: '🚧' })
+        toast.success('Edit functionality coming soon!', { icon: '🚧' })
     }
 
     const handleDelete = () => {
-        toast.success("Delete functionality coming soon!", { icon: '🚧' })
+        toast.success('Delete functionality coming soon!', { icon: '🚧' })
     }
 
     // Pagination calculations
-    const totalPages = Math.max(1, Math.ceil(filteredIdeas.length / rowsPerPage))
+    const totalPages = Math.max(
+        1,
+        Math.ceil(filteredIdeas.length / rowsPerPage)
+    )
     const startIndex = (currentPage - 1) * rowsPerPage
-    const displayedIdeas = filteredIdeas.slice(startIndex, startIndex + rowsPerPage)
+    const displayedIdeas = filteredIdeas.slice(
+        startIndex,
+        startIndex + rowsPerPage
+    )
 
     if (isLoading) {
         return <LoadingScreen message="Loading your submissions..." />
@@ -155,18 +166,18 @@ export default function MySubmissions() {
                     selectedIdea
                         ? selectedIdea
                         : {
-                            id: '',
-                            title: '',
-                            description: '',
-                            category: 'General',
-                            tags: [],
-                            recommended_level: 'Beginner',
-                            created_at: new Date().toISOString(),
-                            updated_at: new Date().toISOString(),
-                            user_id: authUser?.id || '',
-                            status: 'Pending'
-                        }
-              }
+                              id: '',
+                              title: '',
+                              description: '',
+                              category: 'General',
+                              tags: [],
+                              recommended_level: 'Beginner',
+                              created_at: new Date().toISOString(),
+                              updated_at: new Date().toISOString(),
+                              user_id: authUser?.id || '',
+                              status: 'Pending',
+                          }
+                }
             />
             <div className="p-8 mx-auto min-h-[680px]">
                 <h2 className="text-xl font-bold mb-4">My Submissions</h2>
@@ -245,7 +256,9 @@ export default function MySubmissions() {
                                 {displayedIdeas.length > 0 ? (
                                     displayedIdeas.map((idea, index) => (
                                         <TableRow key={idea.id}>
-                                            <TableCell>{startIndex + index + 1}.</TableCell>
+                                            <TableCell>
+                                                {startIndex + index + 1}.
+                                            </TableCell>
                                             <TableCell>{idea.title}</TableCell>
                                             <TableCell>
                                                 {idea.description}
@@ -253,7 +266,8 @@ export default function MySubmissions() {
                                             <TableCell>
                                                 <Badge
                                                     variant={
-                                                        idea.status === 'Approved'
+                                                        idea.status ===
+                                                        'Approved'
                                                             ? 'default2'
                                                             : idea.status ===
                                                                 'Rejected'
@@ -265,11 +279,14 @@ export default function MySubmissions() {
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
-                                                {idea.feedback || 'No feedback yet'}
+                                                {idea.feedback ||
+                                                    'No feedback yet'}
                                             </TableCell>
                                             <TableCell>
                                                 <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
+                                                    <DropdownMenuTrigger
+                                                        asChild
+                                                    >
                                                         <Button
                                                             variant="outline3"
                                                             size="sm"
@@ -278,7 +295,9 @@ export default function MySubmissions() {
                                                         </Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem onClick={handleEdit}>
+                                                        <DropdownMenuItem
+                                                            onClick={handleEdit}
+                                                        >
                                                             <Edit className="mr-2 h-4 w-4" />
                                                             Edit
                                                         </DropdownMenuItem>
@@ -292,9 +311,11 @@ export default function MySubmissions() {
                                                         </DropdownMenuItem>
 
                                                         <DropdownMenuSeparator />
-                                                        <DropdownMenuItem 
+                                                        <DropdownMenuItem
                                                             className="text-red-600"
-                                                            onClick={handleDelete}
+                                                            onClick={
+                                                                handleDelete
+                                                            }
                                                         >
                                                             <Trash className="mr-2 h-4 w-4" />
                                                             Delete
@@ -306,7 +327,10 @@ export default function MySubmissions() {
                                     ))
                                 ) : (
                                     <TableRow>
-                                        <TableCell colSpan={6} className="text-center py-8">
+                                        <TableCell
+                                            colSpan={6}
+                                            className="text-center py-8"
+                                        >
                                             You haven't submitted any ideas yet.
                                         </TableCell>
                                     </TableRow>
@@ -343,16 +367,28 @@ export default function MySubmissions() {
                                         </SelectTrigger>
                                     </div>
                                     <SelectContent>
-                                        <SelectItem className="text-xs" value="5">
+                                        <SelectItem
+                                            className="text-xs"
+                                            value="5"
+                                        >
                                             5
                                         </SelectItem>
-                                        <SelectItem className="text-xs" value="10">
+                                        <SelectItem
+                                            className="text-xs"
+                                            value="10"
+                                        >
                                             10
                                         </SelectItem>
-                                        <SelectItem className="text-xs" value="15">
+                                        <SelectItem
+                                            className="text-xs"
+                                            value="15"
+                                        >
                                             15
                                         </SelectItem>
-                                        <SelectItem className="text-xs" value="20">
+                                        <SelectItem
+                                            className="text-xs"
+                                            value="20"
+                                        >
                                             20
                                         </SelectItem>
                                     </SelectContent>
@@ -371,7 +407,10 @@ export default function MySubmissions() {
                                                     variant="outline3"
                                                     onClick={() =>
                                                         setCurrentPage((prev) =>
-                                                            Math.max(prev - 1, 1)
+                                                            Math.max(
+                                                                prev - 1,
+                                                                1
+                                                            )
                                                         )
                                                     }
                                                     disabled={currentPage === 1}
@@ -394,7 +433,10 @@ export default function MySubmissions() {
                                                             )
                                                         )
                                                     }
-                                                    disabled={currentPage === totalPages}
+                                                    disabled={
+                                                        currentPage ===
+                                                        totalPages
+                                                    }
                                                 >
                                                     <ChevronRight
                                                         strokeWidth={2.5}

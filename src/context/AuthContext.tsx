@@ -7,203 +7,214 @@ import { AuthContextType, User } from '@/types'
 
 let useLoadingImport: any
 try {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  useLoadingImport = require('./LoadingContext').useLoading
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    useLoadingImport = require('./LoadingContext').useLoading
 } catch (e) {
-  console.log('Loading context not available yet', e)
+    console.log('Loading context not available yet', e)
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false)
-  const navigate = useNavigate()
+    const [user, setUser] = useState<User | null>(null)
+    const [isLoading, setIsLoading] = useState(true)
+    const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false)
+    const navigate = useNavigate()
 
-  const getLoadingContext = () => {
-    try {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      return useLoadingImport ? useLoadingImport() : null
-    } catch (e) {
-      return null
-    }
-  }
-
-  useEffect(() => {
-    const checkTokenExpiry = () => {
-      const token = localStorage.getItem('token')
-      const expiry = localStorage.getItem('token_expiry')
-
-      if (token && expiry) {
-        const expiryDate = new Date(expiry)
-        if (expiryDate < new Date()) {
-          // Token expired
-          console.log('Token expired, logging out')
-          logout()
+    const getLoadingContext = () => {
+        try {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            return useLoadingImport ? useLoadingImport() : null
+        } catch (e) {
+            return null
         }
-      }
     }
 
-    // Check on mount and every 5 minutes
-    checkTokenExpiry()
-    const interval = setInterval(checkTokenExpiry, 5 * 60 * 1000)
-    return () => clearInterval(interval)
-  }, [])
+    useEffect(() => {
+        const checkTokenExpiry = () => {
+            const token = localStorage.getItem('token')
+            const expiry = localStorage.getItem('token_expiry')
 
-  const loadingContext = getLoadingContext()
+            if (token && expiry) {
+                const expiryDate = new Date(expiry)
+                if (expiryDate < new Date()) {
+                    // Token expired
+                    console.log('Token expired, logging out')
+                    logout()
+                }
+            }
+        }
 
-  useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
+        // Check on mount and every 5 minutes
+        checkTokenExpiry()
+        const interval = setInterval(checkTokenExpiry, 5 * 60 * 1000)
+        return () => clearInterval(interval)
+    }, [])
+
+    const loadingContext = getLoadingContext()
+
+    useEffect(() => {
+        const checkAuthStatus = async () => {
+            try {
+                setIsLoading(true)
+                loadingContext?.startLoading?.('Checking authentication...')
+
+                // Your auth check logic here
+                const token = localStorage.getItem('token')
+                if (!token) {
+                    setUser(null)
+                    return
+                }
+
+                const userData = await profileApi.getCurrentUserProfile()
+                setUser(userData)
+                setHasCompletedOnboarding(!!userData.has_completed_profile)
+            } catch (error) {
+                console.error(error)
+                localStorage.removeItem('token')
+                setUser(null)
+            } finally {
+                setIsLoading(false)
+                loadingContext?.stopLoading?.()
+            }
+        }
+
+        checkAuthStatus()
+    }, [])
+
+    const createProfile = async (data: Partial<User>) => {
+        try {
+            setIsLoading(true)
+            const createdProfileUser = await profileApi.createProfile(data)
+            setUser((prevUser) =>
+                prevUser
+                    ? { ...prevUser, ...createdProfileUser }
+                    : createdProfileUser
+            )
+
+            if (data.has_completed_profile) {
+                setHasCompletedOnboarding(true)
+            }
+
+            toast.success('Profile created successfully')
+            return createdProfileUser
+        } catch (error: any) {
+            toast.error(error.message || 'Failed to create profile')
+            throw error
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const login = async (
+        email: string,
+        password: string
+    ): Promise<User | undefined> => {
         setIsLoading(true)
-        loadingContext?.startLoading?.('Checking authentication...')
+        try {
+            const response = await authApi.signIn({ email, password })
 
-        // Your auth check logic here
-        const token = localStorage.getItem('token')
-        if (!token) {
-          setUser(null)
-          return
+            // Store the user profile
+            if (response.user) {
+                setUser(response.user)
+
+                // Check if the user has completed onboarding
+                const hasCompleted = !!response.user.has_completed_profile
+                setHasCompletedOnboarding(hasCompleted)
+
+                console.log('Login successful:', {
+                    user: response.user,
+                    hasCompletedProfile: hasCompleted,
+                })
+            } else {
+                setUser(null)
+            }
+
+            toast.success('Successfully signed in!')
+
+            return response.user
+        } catch (error: any) {
+            console.error('Login error:', error)
+            toast.error(
+                error?.message || 'Login failed. Please check your credentials.'
+            )
+            throw error
+        } finally {
+            setIsLoading(false)
         }
+    }
 
-        const userData = await profileApi.getCurrentUserProfile()
-        setUser(userData)
-        setHasCompletedOnboarding(!!userData.has_completed_profile)
-      } catch (error) {
-        console.error(error)
+    const signup = async (
+        email: string,
+        password: string,
+        username: string
+    ) => {
+        setIsLoading(true)
+        try {
+            await authApi.signUp({ email, password, username })
+            // Don't navigate - wait for email activation
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const logout = () => {
         localStorage.removeItem('token')
         setUser(null)
-      } finally {
-        setIsLoading(false)
-        loadingContext?.stopLoading?.()
-      }
+        navigate('/auth/login')
+    }
+    if (isLoading) {
+        return <LoadingScreen message="Setting up your experience..." />
     }
 
-    checkAuthStatus()
-  }, [])
+    // Add this method to your AuthContext
+    const handleGoogleAuth = async (token: string) => {
+        setIsLoading(true)
+        try {
+            const userData = await authApi.processGoogleCallback(token)
 
-  const createProfile = async (data: Partial<User>) => {
-    try {
-      setIsLoading(true)
-      const createdProfileUser = await profileApi.createProfile(data)
-      setUser((prevUser) =>
-        prevUser ? { ...prevUser, ...createdProfileUser } : createdProfileUser
-      )
+            setUser(userData)
+            setHasCompletedOnboarding(!!userData.has_completed_profile)
 
-      if (data.has_completed_profile) {
-        setHasCompletedOnboarding(true)
-      }
+            console.log('Google login successful:', {
+                user: userData,
+                hasCompletedProfile: !!userData.has_completed_profile,
+            })
 
-      toast.success('Profile created successfully')
-      return createdProfileUser
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to create profile')
-      throw error
-    } finally {
-      setIsLoading(false)
+            toast.success('Successfully signed in with Google!')
+            return userData
+        } catch (error: any) {
+            console.error('Google login error:', error)
+            toast.error(error?.message || 'Google login failed.')
+            throw error
+        } finally {
+            setIsLoading(false)
+        }
     }
-  }
 
-  const login = async (email: string, password: string): Promise<User | undefined> => {
-    setIsLoading(true)
-    try {
-      const response = await authApi.signIn({ email, password })
-
-      // Store the user profile
-      if (response.user) {
-        setUser(response.user)
-
-        // Check if the user has completed onboarding
-        const hasCompleted = !!response.user.has_completed_profile
-        setHasCompletedOnboarding(hasCompleted)
-
-        console.log('Login successful:', {
-          user: response.user,
-          hasCompletedProfile: hasCompleted,
-        })
-      } else {
-        setUser(null)
-      }
-
-      toast.success('Successfully signed in!')
-
-      return response.user
-    } catch (error: any) {
-      console.error('Login error:', error)
-      toast.error(error?.message || 'Login failed. Please check your credentials.')
-      throw error
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const signup = async (email: string, password: string, username: string) => {
-    setIsLoading(true)
-    try {
-      await authApi.signUp({ email, password, username })
-      // Don't navigate - wait for email activation
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const logout = () => {
-    localStorage.removeItem('token')
-    setUser(null)
-    navigate('/auth/login')
-  }
-  if (isLoading) {
-    return <LoadingScreen message="Setting up your experience..." />
-  }
-
-  // Add this method to your AuthContext
-  const handleGoogleAuth = async (token: string) => {
-    setIsLoading(true)
-    try {
-      const userData = await authApi.processGoogleCallback(token)
-
-      setUser(userData)
-      setHasCompletedOnboarding(!!userData.has_completed_profile)
-
-      console.log('Google login successful:', {
-        user: userData,
-        hasCompletedProfile: !!userData.has_completed_profile,
-      })
-
-      toast.success('Successfully signed in with Google!')
-      return userData
-    } catch (error: any) {
-      console.error('Google login error:', error)
-      toast.error(error?.message || 'Google login failed.')
-      throw error
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isLoading,
-        isAuthenticated: !!user,
-        login,
-        logout,
-        signup,
-        createProfile,
-        hasCompletedOnboarding,
-        handleGoogleAuth,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  )
+    return (
+        <AuthContext.Provider
+            value={{
+                user,
+                isLoading,
+                isAuthenticated: !!user,
+                login,
+                logout,
+                signup,
+                createProfile,
+                hasCompletedOnboarding,
+                handleGoogleAuth,
+            }}
+        >
+            {children}
+        </AuthContext.Provider>
+    )
 }
 
 export const useAuth = () => {
-  const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider')
-  }
-  return context
+    const context = useContext(AuthContext)
+    if (!context) {
+        throw new Error('useAuth must be used within an AuthProvider')
+    }
+    return context
 }

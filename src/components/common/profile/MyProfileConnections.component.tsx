@@ -2,15 +2,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 
 export function MyProfileConnections() {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-base font-bold">Connections</CardTitle>
-        <Separator />
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground italic">Comming soon...</p>
-        {/* {[
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle className="text-base font-bold">
+                    Connections
+                </CardTitle>
+                <Separator />
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <p className="text-sm text-muted-foreground italic">
+                    Comming soon...
+                </p>
+                {/* {[
                     {
                         name: 'Olivia Davis',
                         email: 'olivia.davis@example.com',
@@ -65,7 +69,7 @@ export function MyProfileConnections() {
                         </Button>
                     </div>
                 ))} */}
-      </CardContent>
-    </Card>
-  )
+            </CardContent>
+        </Card>
+    )
 }

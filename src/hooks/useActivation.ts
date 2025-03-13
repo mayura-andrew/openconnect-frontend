@@ -5,28 +5,27 @@ import { authApi } from '../api'
 import { ActivationResponse, ApiError, UseActivationReturn } from '../types'
 
 export const useActivation = (): UseActivationReturn => {
-  const navigate = useNavigate()
+    const navigate = useNavigate()
 
-  const { mutate, isPending, isError, error, isSuccess } = useMutation<
-    ActivationResponse,
-    ApiError,
-    string
-  >({
-    mutationFn: authApi.activateUser,
-    onSuccess: () => {
-      toast.success('Account activated successfully')
-      navigate('/auth/login')
-    },
-    onError: (error) => {
-      toast.error(error.message || 'Failed to activate account')
-    },
-  })
+    const { mutate, isPending, isError, error, isSuccess } = useMutation<
+        ActivationResponse,
+        ApiError,
+        string
+    >({
+        mutationFn: authApi.activateUser,
+        onSuccess: () => {
+            toast.success('Account activated successfully')
+        },
+        onError: (error) => {
+            toast.error(error.message || 'Failed to activate account')
+        },
+    })
 
-  return {
-    activateUser: mutate,
-    isLoading: isPending,
-    isError,
-    error,
-    isSuccess,
-  }
+    return {
+        activateUser: mutate,
+        isLoading: isPending,
+        isError,
+        error,
+        isSuccess,
+    }
 }

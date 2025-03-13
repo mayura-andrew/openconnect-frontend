@@ -6,23 +6,23 @@ import SmartHeader from './Header/SmartHeader.componenet'
 import { RequestPanel } from './Header/RequestPanel'
 
 export const PublicLayout = () => {
-  const { requests, isRequestPanelOpen, setIsRequestPanelOpen } = useApp()
+    const { requests, isRequestPanelOpen, setIsRequestPanelOpen } = useApp()
 
-  return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      <SmartHeader />
-      <main className="flex-1">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8">
-          <Outlet />
+    return (
+        <div className="flex flex-col min-h-screen bg-gray-50">
+            <SmartHeader />
+            <main className="flex-grow">
+                <div className="mx-auto">
+                    <Outlet />
+                </div>
+            </main>
+            <About />
+            <Footer />
+            <RequestPanel
+                requests={requests}
+                isOpen={isRequestPanelOpen}
+                onClose={() => setIsRequestPanelOpen(false)}
+            />
         </div>
-      </main>
-      <About />
-      <Footer />
-      <RequestPanel
-        requests={requests}
-        isOpen={isRequestPanelOpen}
-        onClose={() => setIsRequestPanelOpen(false)}
-      />
-    </div>
-  )
+    )
 }

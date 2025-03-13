@@ -29,16 +29,18 @@ import { Badge } from '@/components/ui/badge'
 // Define the extended idea type that includes author information
 interface IdeaWithAuthor extends Idea {
     author?: {
-        name: string;
-        image: string;
-        id: string;
-    };
+        name: string
+        image: string
+        id: string
+    }
 }
 
 export const ViewOtherUsersIdeas = () => {
     // State for modal and idea selection
     const [viewIdeaModalOpen, setViewIdeaModalOpen] = useState(false)
-    const [selectedIdea, setSelectedIdea] = useState<IdeaWithAuthor | null>(null)
+    const [selectedIdea, setSelectedIdea] = useState<IdeaWithAuthor | null>(
+        null
+    )
 
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1)
@@ -49,7 +51,10 @@ export const ViewOtherUsersIdeas = () => {
     const [search, setSearch] = useState('')
 
     // Fetch profiles with ideas using the custom hook
-    const { data, isLoading, isError, refetch } = useProfilesWithIdeas(100, offset)
+    const { data, isLoading, isError, refetch } = useProfilesWithIdeas(
+        100,
+        offset
+    )
 
     // State to store all ideas from all users
     const [allIdeas, setAllIdeas] = useState<IdeaWithAuthor[]>([])
@@ -60,15 +65,15 @@ export const ViewOtherUsersIdeas = () => {
         if (data?.profiles) {
             // Collect ideas from all profiles
             const ideas: IdeaWithAuthor[] = []
-            data.profiles.forEach(profile => {
+            data.profiles.forEach((profile) => {
                 // Add profile information to each idea for display
-                const ideasWithAuthor = profile.ideas.map(idea => ({
+                const ideasWithAuthor = profile.ideas.map((idea) => ({
                     ...idea,
                     author: {
                         name: profile.name || profile.username,
                         image: profile.image || profile.avatar || '',
-                        id: profile.id
-                    }
+                        id: profile.id,
+                    },
                 }))
                 ideas.push(...ideasWithAuthor)
             })
@@ -103,9 +108,15 @@ export const ViewOtherUsersIdeas = () => {
     }
 
     // Pagination calculations
-    const totalPages = Math.max(1, Math.ceil(filteredIdeas.length / rowsPerPage))
+    const totalPages = Math.max(
+        1,
+        Math.ceil(filteredIdeas.length / rowsPerPage)
+    )
     const startIndex = (currentPage - 1) * rowsPerPage
-    const displayedIdeas = filteredIdeas.slice(startIndex, startIndex + rowsPerPage)
+    const displayedIdeas = filteredIdeas.slice(
+        startIndex,
+        startIndex + rowsPerPage
+    )
 
     // Show loading state
     if (isLoading) {
@@ -131,8 +142,10 @@ export const ViewOtherUsersIdeas = () => {
                         ...selectedIdea,
                         category: selectedIdea.category || 'General',
                         tags: selectedIdea.tags || [],
-                        learning_outcome: selectedIdea.learning_outcome || 'Not specified',
-                        recommended_level: selectedIdea.recommended_level || 'Beginner'
+                        learning_outcome:
+                            selectedIdea.learning_outcome || 'Not specified',
+                        recommended_level:
+                            selectedIdea.recommended_level || 'Beginner',
                     }}
                 />
             )}
@@ -164,7 +177,7 @@ export const ViewOtherUsersIdeas = () => {
                         </div>
                     </div>
                 </div>
-                
+
                 <div className="p-4 pt-8 sm:p-8">
                     {filteredIdeas.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 min-h-[350px]">
@@ -182,12 +195,15 @@ export const ViewOtherUsersIdeas = () => {
                                                 />
                                             ) : null}
                                             <AvatarFallback>
-                                                {idea.author?.name ? idea.author.name[0].toUpperCase() : 'U'}
+                                                {idea.author?.name
+                                                    ? idea.author.name[0].toUpperCase()
+                                                    : 'U'}
                                             </AvatarFallback>
                                         </Avatar>
                                         <div>
                                             <h3 className="font-semibold text-sm">
-                                                {idea.author?.name || 'Anonymous'}
+                                                {idea.author?.name ||
+                                                    'Anonymous'}
                                             </h3>
                                             <p className="text-xs text-gray-500">
                                                 <span className="font-semibold">
@@ -233,13 +249,16 @@ export const ViewOtherUsersIdeas = () => {
                         </div>
                     ) : (
                         <div className="flex flex-col items-center justify-center min-h-[350px] bg-white rounded-lg shadow p-8">
-                            <h3 className="text-xl font-bold mb-2">No ideas found</h3>
+                            <h3 className="text-xl font-bold mb-2">
+                                No ideas found
+                            </h3>
                             <p className="text-gray-500 text-center mb-6">
-                                There are no ideas matching your search criteria.
+                                There are no ideas matching your search
+                                criteria.
                             </p>
                             {search && (
-                                <Button 
-                                    variant="outline" 
+                                <Button
+                                    variant="outline"
                                     onClick={() => setSearch('')}
                                 >
                                     Clear search
@@ -314,7 +333,9 @@ export const ViewOtherUsersIdeas = () => {
                                                 }
                                                 disabled={currentPage === 1}
                                             >
-                                                <ChevronLeft strokeWidth={2.5} />
+                                                <ChevronLeft
+                                                    strokeWidth={2.5}
+                                                />
                                             </Button>
                                         </PaginationItem>
                                         <PaginationItem>
@@ -330,9 +351,13 @@ export const ViewOtherUsersIdeas = () => {
                                                         )
                                                     )
                                                 }
-                                                disabled={currentPage === totalPages}
+                                                disabled={
+                                                    currentPage === totalPages
+                                                }
                                             >
-                                                <ChevronRight strokeWidth={2.5} />
+                                                <ChevronRight
+                                                    strokeWidth={2.5}
+                                                />
                                             </Button>
                                         </PaginationItem>
                                     </PaginationContent>
