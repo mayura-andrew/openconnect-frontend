@@ -15,6 +15,12 @@ import UserProfilePage from './components/common/profile/UserProfileView.compone
 import MyProfileView from './components/common/profile/MyProfileView.component'
 import MySubmissions from './components/common/profile/MySubmission.component'
 import { ViewOtherUsersIdeas } from './components/common/profile/ViewOtherUserIdeas.component'
+import AdminLayout from './pages/Admin'
+import AdminDashboard from './components/admin/AdminDashboard.component'
+import AdminPanelIdeas from './components/admin/AdminPanelIdeas.component'
+import { AdminRoute } from './components/admin/AdminRoute.component'
+import AdminSetting from './components/admin/AdminSetting.component'
+import AdminUsers from './components/admin/AdminUsers.component'
 
 export const Router = () => {
     return (
@@ -27,7 +33,7 @@ export const Router = () => {
                 <Route path="/mysubmission" element={<MySubmissions />} />
                 <Route path="/view-ideas" element={<ViewOtherUsersIdeas />} />
             </Route>
-
+            
             <Route path="/auth/login" element={<SignIn />} />
             <Route path="/auth/signup" element={<SignUp />} />
             <Route
@@ -42,6 +48,15 @@ export const Router = () => {
             <Route element={<AuthenticatedLayout />}>
                 <Route element={<OnboardingLayout />}>
                     <Route path="/onboarding" element={<ProfileOnboarding />} />
+                </Route>
+            </Route>
+
+            <Route element={<AdminRoute />}>
+                <Route path="/admin" element={<AdminLayout />}>
+                    <Route index element={<AdminDashboard />} />
+                    <Route path="ideas" element={<AdminPanelIdeas />} />
+                    <Route path="users" element={<AdminUsers />} />
+                    <Route path="settings" element={<AdminSetting />} />
                 </Route>
             </Route>
 

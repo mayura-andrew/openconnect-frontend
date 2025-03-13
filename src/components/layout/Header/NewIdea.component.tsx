@@ -56,7 +56,7 @@ const formSchema = z.object({
         z.literal('intermediate'),
         z.literal('advanced'),
     ]),
-    pdfFile: z.union([z.instanceof(File), z.null()]).optional(),
+    pdf: z.union([z.instanceof(File), z.null()]).optional(),
 })
 
 interface NewIdeaModalProps {
@@ -86,7 +86,7 @@ export const NewIdea: React.FC<NewIdeaModalProps> = ({
             tags: [],
             learning_outcome: '',
             recommended_level: 'beginner',
-            pdfFile: null,
+            pdf: null,
         },
     })
 
@@ -185,6 +185,8 @@ export const NewIdea: React.FC<NewIdeaModalProps> = ({
                 Promise.resolve(submitIdea(ideaData)).then(() => {
                     notifyIdeaSubmission()
                 })
+
+                console.log('submit idea with pdf', ideaData)
             }
             reader.readAsDataURL(selectedFile)
         } else {
