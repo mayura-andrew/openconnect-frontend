@@ -115,8 +115,8 @@ export const ViewIdea: React.FC<ViewIdeaProps> = ({
                 <div className="mt-4">
                     <p className="text-gray-800 mb-6 font-bold">Tags</p>
                     <div className="flex flex-wrap gap-4 mt-1">
-                        {idea.tags.length > 0 ? (
-                            idea.tags.map((tag) => (
+                        {Array.isArray(idea.tags) && idea.tags.length > 0 ? (
+                            idea.tags.map((tag: string) => (
                                 <Badge
                                     key={tag}
                                     className="bg-muted text-gray-600 text-xs hover:bg-slate-100 hover:text-gray-600"

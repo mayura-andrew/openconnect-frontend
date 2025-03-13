@@ -213,8 +213,8 @@ export const ViewOtherUsersIdeas = () => {
                                             </p>
                                         </div>
                                     </div>
-                                    <Separator className="my-2" />
-                                    <h4 className="font-bold text-lg mt-2 md:truncate">
+                                    <Separator />
+                                    <h4 className="font-bold text-lg md:truncate">
                                         {idea.title}
                                     </h4>
                                     <p className="text-sm text-gray-600 mt-1 line-clamp-2">
