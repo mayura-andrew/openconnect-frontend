@@ -6,14 +6,14 @@ import Spinner from '@/components/common/Spinner.component'
 const Activation = () => {
     const [searchParams] = useSearchParams()
     const token = searchParams.get('token')
-    const { activateUser, isLoading, isError, error, isSuccess } = useActivation()
+    const { activateUser, isLoading, isError, error, isSuccess } =
+        useActivation()
 
     useEffect(() => {
         if (token) {
             activateUser(token)
         }
     }, [token, activateUser])
-
 
     const navigate = useNavigate()
     useEffect(() => {
@@ -85,9 +85,7 @@ const Activation = () => {
                 <div className="flex justify-center">
                     <Spinner />
                 </div>
-                <p className="mt-4 text-blue-800 font-medium">
-                    Please wait...
-                </p>
+                <p className="mt-4 text-blue-800 font-medium">Please wait...</p>
             </div>
         </div>
     )

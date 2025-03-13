@@ -54,7 +54,7 @@ const formSchema = z.object({
     recommended_level: z.union([
         z.literal('beginner'),
         z.literal('intermediate'),
-        z.literal('advanced')
+        z.literal('advanced'),
     ]),
     pdfFile: z.union([z.instanceof(File), z.null()]).optional(),
 })
@@ -63,8 +63,7 @@ interface NewIdeaModalProps {
     open: boolean
     onOpenChange: (open: boolean) => void
 }
-type FormValues = z.infer<typeof formSchema>;
-
+type FormValues = z.infer<typeof formSchema>
 
 export const NewIdea: React.FC<NewIdeaModalProps> = ({
     open,
@@ -189,15 +188,17 @@ export const NewIdea: React.FC<NewIdeaModalProps> = ({
             }
             reader.readAsDataURL(selectedFile)
         } else {
-            Promise.resolve(submitIdea({
-                title: values.title,
-                description: values.description,
-                category: values.category,
-                tags: tags,
-                learning_outcome: values.learning_outcome,
-                recommended_level: values.recommended_level,
-                github_link: values.github_link || undefined,
-            })).then(() => {
+            Promise.resolve(
+                submitIdea({
+                    title: values.title,
+                    description: values.description,
+                    category: values.category,
+                    tags: tags,
+                    learning_outcome: values.learning_outcome,
+                    recommended_level: values.recommended_level,
+                    github_link: values.github_link || undefined,
+                })
+            ).then(() => {
                 notifyIdeaSubmission()
             })
         }

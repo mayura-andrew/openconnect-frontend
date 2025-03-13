@@ -12,17 +12,17 @@ export function App() {
     return (
         <LoadingProvider>
             <IdeaProvider>
-            <QueryProvider>
-                <BrowserRouter>
-                    <AuthProvider>
-                        <AppProvider>
-                            <Router />
-                            <Toaster />
-                        </AppProvider>
-                    </AuthProvider>
-                </BrowserRouter>
+                <QueryProvider>
+                    <BrowserRouter>
+                        <AuthProvider>
+                            <AppProvider>
+                                <Router />
+                                <Toaster />
+                            </AppProvider>
+                        </AuthProvider>
+                    </BrowserRouter>
                 </QueryProvider>
-                </IdeaProvider>
+            </IdeaProvider>
         </LoadingProvider>
     )
 }

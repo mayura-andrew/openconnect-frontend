@@ -93,11 +93,11 @@ const MyProfileView = () => {
     useEffect(() => {
         if (ideaSubmitted) {
             // Refetch user data when an idea is submitted
-            refetch();
+            refetch()
             // Reset the submission flag
-            resetIdeaSubmission();
+            resetIdeaSubmission()
         }
-    }, [ideaSubmitted, refetch, resetIdeaSubmission]);
+    }, [ideaSubmitted, refetch, resetIdeaSubmission])
 
     const handleBack = () => {
         navigate(-1)
