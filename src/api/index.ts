@@ -287,8 +287,6 @@ export const profileApi = {
         return response.data
     },
 
-    // ... your existing methods
-
     getUserProfileById: async (
         userId: string
     ): Promise<UserProfileByIdResponse> => {
@@ -302,6 +300,32 @@ export const profileApi = {
                 throw error.response.data
             }
             throw error
+        }
+    },
+
+    updateProfile: async (data: Partial<User>): Promise<User> => {
+        try {
+            const response = await axiosInstance.patch<UserProfileResponse>(
+                '/profile/update',
+                data
+            )
+
+            if (response.data.profile) {
+                return response.data.profile
+            }
+
+            throw new Error('Unexpected profile update response structure')
+        } catch (error: any) {
+            console.error('Error updating user profile:', error)
+
+            if (error.response?.data) {
+                throw error.response.data
+            }
+
+            throw {
+                message: 'Failed to update user profile',
+                originalError: error,
+            }
         }
     },
 }

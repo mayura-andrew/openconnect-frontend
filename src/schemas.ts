@@ -47,3 +47,15 @@ export const ChangePasswordSchema = z
         message: 'Passwords must match',
         path: ['confirmPassword'],
     })
+
+export const profileSchema = z.object({
+    firstname: z.string().optional(),
+    lastname: z.string().optional(),
+    email: z.string().optional(),
+    title: z.string().optional(),
+    mobile: z.string().optional(),
+    degree: z.string().optional(),
+    uni: z.string().optional(),
+    faculty: z.string().optional(),
+    bio: z.string().optional(),
+})

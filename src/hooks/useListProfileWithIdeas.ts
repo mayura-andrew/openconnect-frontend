@@ -15,8 +15,8 @@ interface UserProfile {
     program: string
     bio?: string
     image?: string
-    avatarURL?: string
-    avatar?: string
+    avatarURL?: string | File
+    avatar?: string | File
     skills: string[]
     ideas: Idea[]
     linkedin?: string

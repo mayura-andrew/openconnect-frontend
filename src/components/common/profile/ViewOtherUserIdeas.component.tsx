@@ -30,7 +30,7 @@ import { Badge } from '@/components/ui/badge'
 interface IdeaWithAuthor extends Idea {
     author?: {
         name: string
-        image: string
+        image: string | File
         id: string
     }
 }
@@ -221,17 +221,21 @@ export const ViewOtherUsersIdeas = () => {
                                         {idea.description}
                                     </p>
 
-                                    {/* Tags Section */}
-                                    <div className="flex flex-wrap gap-2 my-4 truncate max-h-6">
-                                        {idea.tags?.map((tag, index) => (
-                                            <Badge
-                                                key={index}
-                                                className="bg-muted text-gray-600 text-xs hover:bg-slate-100 hover:text-gray-600"
-                                            >
-                                                {tag}
-                                            </Badge>
-                                        ))}
-                                    </div>
+                                    {/* Tags Section
+                                    <div className="flex flex-wrap gap-2 my-4">
+                                        {Array.isArray(idea.tags) && idea.tags.length > 0 ? (
+                                            idea.tags.map((tag, index) => (
+                                                <Badge
+                                                    key={index}
+                                                    className="bg-muted text-gray-600 text-xs hover:bg-slate-100 hover:text-gray-600"
+                                                >
+                                                    {tag}
+                                                </Badge>
+                                            ))
+                                        ) : (
+                                            <span className="text-gray-500 text-xs italic">No tags</span>
+                                        )}
+                                    </div> */}
 
                                     {/* View Button */}
                                     <div className="pt-2 mt-auto">

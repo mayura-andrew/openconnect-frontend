@@ -44,13 +44,6 @@ const Home: React.FC = () => {
     return (
         <>
             <div className="flex flex-col min-h-screen overflow-hidden">
-                {/* Animated background */}
-                {/* <div className="absolute inset-0 z-[-1] overflow-hidden">
-                    <div className="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-                    <div className="absolute top-0 -right-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-                    <div className="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
-                </div> */}
-
                 {/* Hero Section */}
                 <section
                     id="hero-section"
@@ -67,18 +60,19 @@ const Home: React.FC = () => {
                                 <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-blue-600 mb-4 animate-pulse">
                                     {/* <Globe className="mr-2 h-3 w-3 text-green-600" />{' '} */}
                                     <span className="text-xs font-medium">
-                                        ✨ Connecting professionals worldwide
+                                        ✨ Connecting university students with
+                                        like-minded peers
                                     </span>
                                 </div>
                                 <h1 className="text-blue-600 text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                                     {isAuthenticated
                                         ? `Welcome back${user?.firstname ? ', ' + user.firstname : ''}!`
-                                        : 'Connect, Collaborate, Create Together'}
+                                        : 'Connect, Collaborate, Learn Together'}
                                 </h1>
                                 <p className="text-lg md:text-lg text-blue-900">
                                     {isAuthenticated
-                                        ? 'Continue exploring ideas and connecting with professionals in your field.'
-                                        : 'Join the OpenConnect community and discover meaningful connections with professionals and mentors in your field.'}
+                                        ? 'Continue exploring ideas and connecting with students and faculty across campus.'
+                                        : 'Join the OpenConnect campus community and discover meaningful connections with students, professors, and mentors in your field of study.'}
                                 </p>
 
                                 {isAuthenticated ? (
@@ -141,7 +135,6 @@ const Home: React.FC = () => {
                                             className="max-w-full h-auto relative z-10 drop-shadow-2xl"
                                         />
                                     </div>
-                                    {/* Floating elements for decoration */}
                                     <div className="absolute top-1/4 -left-5 w-12 h-12 bg-blue-400 rounded-full opacity-20 animate-float"></div>
                                     <div className="absolute bottom-1/3 -right-3 w-8 h-8 bg-purple-400 rounded-full opacity-30 animate-float animation-delay-2000"></div>
                                 </div>
@@ -164,8 +157,8 @@ const Home: React.FC = () => {
                                 Why Choose OpenConnect?
                             </h2>
                             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                                We're building the network that helps
-                                professionals connect, grow, and achieve more
+                                We're building the network that helps students
+                                and faculty connect, learn, and achieve more
                                 together.
                             </p>
                         </motion.div>
@@ -191,7 +184,7 @@ const Home: React.FC = () => {
                                     icon: Globe,
                                     title: 'Global Community',
                                     description:
-                                        'Join a worldwide network of professionals across various industries.',
+                                        'Join a campus-wide network spanning all disciplines',
                                     bgColor:
                                         'bg-gradient-to-br from-cyan-100 to-cyan-50',
                                     textColor: 'text-cyan-600',
@@ -200,7 +193,7 @@ const Home: React.FC = () => {
                                     icon: Lightbulb,
                                     title: 'Share Ideas',
                                     description:
-                                        'Exchange innovative ideas and get feedback from industry experts.',
+                                        'Exchange research ideas and get feedback from experts',
                                     bgColor:
                                         'bg-gradient-to-br from-purple-100 to-purple-50',
                                     textColor: 'text-purple-600',
@@ -209,7 +202,7 @@ const Home: React.FC = () => {
                                     icon: Calendar,
                                     title: 'Events & Meetups',
                                     description:
-                                        'Participate in virtual and in-person events to expand your network.',
+                                        'Participate in campus events and academic meet-ups',
                                     bgColor:
                                         'bg-gradient-to-br from-teal-100 to-teal-50',
                                     textColor: 'text-teal-600',
@@ -224,7 +217,6 @@ const Home: React.FC = () => {
                                                 <feature.icon
                                                     className={`w-8 h-8 ${feature.textColor} group-hover:scale-125 transition-transform duration-500`}
                                                 />
-                                                {/* Animate the ring when hovered */}
                                                 <span className="absolute inset-0 rounded-full border-2 border-transparent group-hover:border-blue-200 group-hover:scale-110 transition-all duration-500"></span>
                                             </div>
                                             <h3 className="text-xl font-semibold">
@@ -260,12 +252,12 @@ const Home: React.FC = () => {
                             {isAuthenticated ? (
                                 <>
                                     <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                                        Ready to share your ideas?
+                                        Ready to grow your academic network?
                                     </h2>
                                     <p className="text-xl text-gray-500 mb-8 max-w-3xl mx-auto">
-                                        Join the conversation by sharing your
-                                        knowledge and insights with the
-                                        community.
+                                        Join students and faculty who are
+                                        already connecting, collaborating, and
+                                        learning together.
                                     </p>
                                     <Button
                                         className="text-base py-6 px-10 shadow-lg hover:shadow-xl transition-all duration-300"
@@ -289,10 +281,10 @@ const Home: React.FC = () => {
                                     </p>
                                     <Button
                                         className="text-base py-6 px-10 shadow-lg hover:shadow-xl transition-all duration-300"
-                                        onClick={() => navigate('/auth/signup')}
+                                        onClick={() => navigate('/community')}
                                     >
                                         <span className="flex items-center">
-                                            Sign Up Now{' '}
+                                            Explore Community{' '}
                                             <ArrowRight className="ml-2 h-5 w-5 animate-bounce-horizontal" />
                                         </span>
                                     </Button>

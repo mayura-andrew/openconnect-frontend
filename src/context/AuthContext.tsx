@@ -180,8 +180,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 user: userData,
                 hasCompletedProfile: !!userData.has_completed_profile,
             })
-
-            toast.success('Successfully signed in with Google!')
             return userData
         } catch (error: any) {
             console.error('Google login error:', error)

@@ -260,7 +260,7 @@ export default function MySubmissions() {
                                                 {startIndex + index + 1}.
                                             </TableCell>
                                             <TableCell>{idea.title}</TableCell>
-                                            <TableCell>
+                                            <TableCell className="max-w-xs truncate">
                                                 {idea.description}
                                             </TableCell>
                                             <TableCell>

@@ -32,13 +32,10 @@ const GoogleCallback = () => {
                     sessionStorage.getItem('googleAuthReturnTo') || '/'
                 sessionStorage.removeItem('googleAuthReturnTo')
 
-                console.log('Google auth return path:', returnPath)
                 // Navigate based on profile completion status
-                if (user.has_profile_created === false) {
-                    console.log('Redirecting to onboarding...')
+                if (user.has_completed_profile === false) {
                     navigate('/onboarding')
                 } else {
-                    console.log('Redirecting to community...')
                     navigate('/community')
                 }
             } catch (err: any) {

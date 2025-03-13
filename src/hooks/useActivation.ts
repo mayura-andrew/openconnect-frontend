@@ -14,10 +14,11 @@ export const useActivation = (): UseActivationReturn => {
     >({
         mutationFn: authApi.activateUser,
         onSuccess: () => {
-            toast.success('Account activated successfully')
+            navigate('/auth/login')
         },
         onError: (error) => {
-            toast.error(error.message || 'Failed to activate account')
+            // toast.error(error.message || 'Failed to activate account')
+            console.log(error)
         },
     })
 
