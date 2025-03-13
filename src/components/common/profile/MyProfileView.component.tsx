@@ -462,7 +462,7 @@ const MyProfileView = () => {
                                 </CardTitle>
                             </CardHeader>
                             <Separator />
-                            <CardContent className="flex flex-col min-h-40 pt-6">
+                            <CardContent className="flex flex-col min-h-40">
                                 <div className="flex-grow overflow-auto border border-gray-300 rounded-lg">
                                     <Table>
                                         <TableHeader>

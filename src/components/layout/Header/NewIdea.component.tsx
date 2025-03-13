@@ -428,7 +428,7 @@ export const NewIdea: React.FC<NewIdeaModalProps> = ({
                                             type="file"
                                             accept=".pdf"
                                             onChange={handleFileChange}
-                                            className="border-gray-300 text-gray-500 focus:border-blue-600 focus:ring-blue-600 pr-10 pl-3 h-10"
+                                            className="border-gray-300 text-gray-500 focus:border-blue-600 focus:ring-blue-600 pr-10 pl-1 pt-0 h-7 text-xs"
                                         />
 
                                         {selectedFile && (
