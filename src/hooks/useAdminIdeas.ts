@@ -37,7 +37,7 @@ export function useUpdateIdeaStatus() {
       feedback 
     }: { 
       ideaId: string; 
-      status: 'approved' | 'rejected' | 'pending'; 
+      status: 'Approved' | 'Rejected' | 'Pending'; 
       feedback?: string 
     }) => {
       const payload: { status: string; feedback?: string } = { status }

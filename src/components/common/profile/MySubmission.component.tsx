@@ -24,6 +24,8 @@ import {
     SelectValue,
 } from '@/components/ui/select'
 import { useApp } from '@/context/AppContext'
+
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
 import {
     ChevronLeft,
     ChevronRight,
@@ -48,6 +50,7 @@ import { Idea } from '@/types'
 import toast from 'react-hot-toast'
 import { ViewIdea } from './ViewIdea.component'
 import { Label } from '@/components/ui/label'
+import { useIdeaDelete } from '@/hooks/useIdeaDelete'
 
 export default function MySubmissions() {
     // Auth and user data
@@ -79,6 +82,27 @@ export default function MySubmissions() {
         }
     }, [userData])
 
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+    const [ideaToDelete, setIdeaToDelete] = useState<string | null>(null)
+    
+    const { deleteIdea, isDeleting } = useIdeaDelete()
+
+    const handleDelete = (ideaId: string) => {
+        setIdeaToDelete(ideaId)
+        setDeleteDialogOpen(true)
+      }
+
+      const confirmDelete = async () => {
+        if (ideaToDelete) {
+          try {
+            await deleteIdea(ideaToDelete)
+            setDeleteDialogOpen(false)
+            setIdeaToDelete(null)
+          } catch (error) {
+            console.error('Error deleting idea:', error)
+          }
+        }
+      }
     // Filter effect
     useEffect(() => {
         if (!userData?.ideas) return
@@ -130,9 +154,6 @@ export default function MySubmissions() {
         toast.success('Edit functionality coming soon!', { icon: '🚧' })
     }
 
-    const handleDelete = () => {
-        toast.success('Delete functionality coming soon!', { icon: '🚧' })
-    }
 
     // Pagination calculations
     const totalPages = Math.max(
@@ -313,9 +334,7 @@ export default function MySubmissions() {
                                                         <DropdownMenuSeparator />
                                                         <DropdownMenuItem
                                                             className="text-red-600"
-                                                            onClick={
-                                                                handleDelete
-                                                            }
+                                                            onClick={() => handleDelete(idea.id)}
                                                         >
                                                             <Trash className="mr-2 h-4 w-4" />
                                                             Delete
@@ -450,6 +469,30 @@ export default function MySubmissions() {
                         </div>
                     )}
                 </Card>
+
+                <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+        <AlertDialogDescription>
+          This action cannot be undone. This will permanently delete your idea submission.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+        <AlertDialogAction 
+          onClick={(e) => {
+            e.preventDefault()
+            confirmDelete()
+          }} 
+          disabled={isDeleting}
+          className="bg-red-600 hover:bg-red-700"
+        >
+          {isDeleting ? 'Deleting...' : 'Delete'}
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
             </div>
         </div>
     )

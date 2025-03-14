@@ -126,6 +126,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     user: response.user,
                     hasCompletedProfile: hasCompleted,
                 })
+
             } else {
                 setUser(null)
             }

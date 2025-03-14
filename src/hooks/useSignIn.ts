@@ -28,10 +28,15 @@ export const useSignIn = (): UseSignInReturn => {
                 'User has completed profile:',
                 user?.has_completed_profile
             )
+
+            
             // Navigate based on profile completion
             if (user?.has_completed_profile == false) {
                 console.log('Redirecting to onboarding...')
                 navigate('/onboarding')
+            } else if (user?.user_type === 'admin') {
+                console.log('Redirecting to admin dashboard...')
+                navigate('/admin/ideas')
             } else {
                 console.log('Redirecting to community...')
                 navigate('/community')

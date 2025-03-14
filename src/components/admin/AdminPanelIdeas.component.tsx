@@ -108,7 +108,7 @@ const AdminPanelIdeas: React.FC = () => {
         setFeedback('')
     }
     
-    const handleAction = async (action: 'approved' | 'rejected' | 'pending') => {
+    const handleAction = async (action: 'Approved' | 'Rejected' | 'Pending') => {
         if (!selectedIdea) return
         
         try {
@@ -133,9 +133,9 @@ const AdminPanelIdeas: React.FC = () => {
     // Status badge component
     const StatusBadge = ({ status }: { status: string }) => {
         switch (status) {
-            case 'approved':
-                return <Badge className="bg-green-100 text-green-800">Approved</Badge>
-            case 'rejected':
+            case 'Approved':
+                return <Badge variant="default2">Approved</Badge>
+            case 'Rejected':
                 return <Badge variant="destructive">Rejected</Badge>
             default:
                 return <Badge variant="secondary">Pending</Badge>
@@ -185,19 +185,19 @@ const AdminPanelIdeas: React.FC = () => {
                         <DropdownMenuContent>
                             <DropdownMenuItem
                                 className="text-gray-800 font-medium"
-                                onClick={() => handleStatusSelect('pending')}
+                                onClick={() => handleStatusSelect('Pending')}
                             >
                                 Pending
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 className="text-green-800 font-medium"
-                                onClick={() => handleStatusSelect('approved')}
+                                onClick={() => handleStatusSelect('Approved')}
                             >
                                 Approved
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 className="text-red-800 font-medium"
-                                onClick={() => handleStatusSelect('rejected')}
+                                onClick={() => handleStatusSelect('Rejected')}
                             >
                                 Rejected
                             </DropdownMenuItem>
@@ -242,7 +242,7 @@ const AdminPanelIdeas: React.FC = () => {
                                         {format(new Date(idea.created_at), 'MMM d, yyyy')}
                                     </TableCell>
                                     <TableCell>
-                                        <StatusBadge status={idea.status || 'pending'} />
+                                        <StatusBadge status={idea.status || 'Pending'} />
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex space-x-2">
@@ -373,7 +373,7 @@ const AdminPanelIdeas: React.FC = () => {
                             </div>
                             <Separator className="my-4" />
 
-                            <p className="text-gray-800 font-bold">Feedback</p>
+                            {/* <p className="text-gray-800 font-bold">Feedback</p>
 
                             {selectedIdeaData.feedback ? (
                                 <div className="text-gray-600 bg-gray-50 text-xs border p-4 rounded-md flex flex-row justify-between items-center">
@@ -385,19 +385,19 @@ const AdminPanelIdeas: React.FC = () => {
                                 </p>
                             )}
 
-                            <Separator className="my-4" />
+                            <Separator className="my-4" /> */}
 
-                            <Textarea
+                            {/* <Textarea
                                 placeholder="Provide feedback..."
                                 value={feedback}
                                 onChange={(e) => setFeedback(e.target.value)}
                             />
-                            
+                             */}
                             <DialogFooter className="mt-6 flex justify-end gap-2">
                                 <Button
                                     size="sm"
                                     variant="outline"
-                                    onClick={() => handleAction('rejected')}
+                                    onClick={() => handleAction('Rejected')}
                                     disabled={updateStatusMutation.isPending}
                                 >
                                     Reject
@@ -406,7 +406,7 @@ const AdminPanelIdeas: React.FC = () => {
                                     size="sm"
                                     variant="secondary"
                                     className="hover:bg-slate-300/50 border-gray-600 border"
-                                    onClick={() => handleAction('pending')}
+                                    onClick={() => handleAction('Pending')}
                                     disabled={updateStatusMutation.isPending}
                                 >
                                     Request Changes
@@ -414,7 +414,7 @@ const AdminPanelIdeas: React.FC = () => {
                                 <Button
                                     size="sm"
                                     variant="default"
-                                    onClick={() => handleAction('approved')}
+                                    onClick={() => handleAction('Approved')}
                                     disabled={updateStatusMutation.isPending}
                                 >
                                     Approve

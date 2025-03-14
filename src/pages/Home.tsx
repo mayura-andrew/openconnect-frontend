@@ -261,10 +261,10 @@ const Home: React.FC = () => {
                                     </p>
                                     <Button
                                         className="text-base py-6 px-10 shadow-lg hover:shadow-xl transition-all duration-300"
-                                        onClick={() => navigate('/submit-idea')}
+                                        onClick={() => navigate('/view-ideas')}
                                     >
                                         <span className="flex items-center">
-                                            Submit an Idea{' '}
+                                            Explore Community Ideas{' '}
                                             <ArrowRight className="ml-2 h-5 w-5 animate-bounce-horizontal" />
                                         </span>
                                     </Button>
