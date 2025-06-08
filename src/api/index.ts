@@ -15,7 +15,6 @@ import {
     User,
     UserProfileByIdResponse,
     UserProfileResponse,
-    UserProfileWithIdeas,
     isActivationError,
     isSignInError,
     isSignUpError,
