@@ -293,6 +293,116 @@ const Home: React.FC = () => {
                         </motion.div>
                     </div>
                 </section>
+                            
+                                {/* Meet the Team Section */}
+                                <section className="py-24 bg-gradient-to-b from-white to-slate-50">
+                                    <div className="container mx-auto px-4 md:px-6">
+                                        <motion.div
+                                            className="text-center mb-16"
+                                            initial={{ opacity: 0, y: 20 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ duration: 0.8 }}
+                                        >
+                                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                                                Meet the Team
+                                            </h2>
+                                            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                                                Built by students, for students. OpenConnect is an open-source project 
+                                                created by passionate university students who believe in the power of connection.
+                                            </p>
+                                        </motion.div>
+                
+                                        <motion.div
+                                            className="max-w-4xl mx-auto"
+                                            variants={containerVariants}
+                                            initial="hidden"
+                                            whileInView="visible"
+                                            viewport={{ once: true }}
+                                        >
+                                            {/* Team Values */}
+                                            <motion.div 
+                                                className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
+                                                variants={itemVariants}
+                                            >
+                                                {[
+                                                    {
+                                                        icon: "🚀",
+                                                        title: "Student-Driven",
+                                                        description: "Created by university students who understand the challenges of academic networking"
+                                                    },
+                                                    {
+                                                        icon: "🌐",
+                                                        title: "Open Source",
+                                                        description: "Completely open-source and transparent, built with community contributions"
+                                                    },
+                                                    {
+                                                        icon: "🤝",
+                                                        title: "Collaborative",
+                                                        description: "We welcome contributors from all backgrounds and skill levels"
+                                                    }
+                                                ].map((value, index) => (
+                                                    <div key={index} className="text-center">
+                                                        <div className="text-4xl mb-4">{value.icon}</div>
+                                                        <h3 className="text-xl font-semibold mb-2">{value.title}</h3>
+                                                        <p className="text-gray-600">{value.description}</p>
+                                                    </div>
+                                                ))}
+                                            </motion.div>
+                
+                                            {/* Call to Join */}
+                                            <motion.div 
+                                                className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 md:p-12 text-center border border-blue-100"
+                                                variants={itemVariants}
+                                            >
+                                                <div className="max-w-2xl mx-auto">
+                                                    <h3 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900">
+                                                        Join Our Engineering Team!
+                                                    </h3>
+                                                    <p className="text-lg text-gray-600 mb-8">
+                                                        We're always looking for passionate students to join our development team. 
+                                                        Whether you're a frontend developer, backend engineer, designer, or just getting started - 
+                                                        we'd love to have you contribute to this open-source project.
+                                                    </p>
+                                                    
+                                                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                                        <Button 
+                                                            className="text-base py-3 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300"
+                                                            onClick={() => window.open('https://github.com/your-repo', '_blank')}
+                                                        >
+                                                            <span className="flex items-center">
+                                                                View on GitHub
+                                                                <ArrowRight className="ml-2 h-4 w-4" />
+                                                            </span>
+                                                        </Button>
+                                                        <Button 
+                                                            variant="outline"
+                                                            className="text-base py-3 px-6 hover:bg-blue-50 transition-all duration-300"
+                                                            onClick={() => navigate('/contact')}
+                                                        >
+                                                            Get In Touch
+                                                        </Button>
+                                                    </div>
+                
+                                                    <div className="mt-8 pt-6 border-t border-blue-200">
+                                                        <p className="text-sm text-gray-500 mb-3">Technologies we use:</p>
+                                                        <div className="flex flex-wrap justify-center gap-2">
+                                                            {['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'Tailwind CSS'].map((tech) => (
+                                                                <span 
+                                                                    key={tech} 
+                                                                    className="px-3 py-1 bg-white rounded-full text-sm text-gray-600 border border-gray-200"
+                                                                >
+                                                                    {tech}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        </motion.div>
+                                    </div>
+                                </section>
+                
             </div>
         </>
     )
