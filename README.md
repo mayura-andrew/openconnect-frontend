@@ -2,6 +2,50 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Setup
+
+To install dependencies, run:
+
+```bash
+pnpm install
+```
+
+To start the development server:
+
+```bash
+pnpm dev
+```
+
+To build the project:
+
+```bash
+pnpm build
+```
+
+To lint the code:
+
+```bash
+pnpm lint
+```
+
+To preview the build:
+
+```bash
+pnpm preview
+```
+
+To format code:
+
+```bash
+pnpm format
+```
+
+To check code formatting:
+
+```bash
+pnpm check-format
+```
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
@@ -27,7 +71,7 @@ export default tseslint.config({
 
 - Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
 - Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) using pnpm: `pnpm add -D eslint-plugin-react` and update the config:
 
 ```js
 // eslint.config.js
